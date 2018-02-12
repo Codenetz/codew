@@ -1,0 +1,5 @@
+[
+  "/modules/example/migrations/create_user_table",
+  "/modules/example/migrations/add_field_name",
+  "/modules/example/migrations/add_default_user"
+]

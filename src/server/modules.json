@@ -1,0 +1,9 @@
+{
+  "CORE": {
+    "path": "/modules/core/core"
+  },
+
+  "EXAMPLE": {
+    "path": "/modules/example/example"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "MODEL": {
+    "path": "/containers/model"
+  },
+  "SERVICE": {
+    "path": "/containers/service"
+  }
+}

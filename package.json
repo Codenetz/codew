@@ -1,0 +1,31 @@
+{
+  "name": "express-react-boilerplate",
+  "version": "0.0.1",
+  "description": "Express React boilerplate",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/hristo939393/express-react-boilerplate.git"
+  },
+  "engines": {
+    "node": ">= 9.4.0"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/hristo939393/express-react-boilerplate#readme",
+  "devDependencies": {
+    "eslint": "^4.16.0",
+    "eslint-plugin-react": "^7.6.0",
+    "morgan": "^1.9.0"
+  },
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "express": "^4.16.2",
+    "helmet": "^3.9.0",
+    "mysql2": "^1.5.1"
+  }
+}
