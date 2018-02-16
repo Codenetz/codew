@@ -6,15 +6,19 @@ class listController extends controller {
   listAction(req, res) {
     // console.log(this.app.get("MODEL"));
     // console.log(this.app.get("SERVICE"));
-    res.send("OK");
+    let errors = [];
+    errors.push(this.createError("test"));
+    errors.push(this.createError("test", "m", "r"));
+    errors.push(this.createError("test", "m"));
+    return this.responseBadRequest(res, "Has error", errors);
   }
 
   createItemAction(req, res) {
-    res.send("OK");
+    res.json("OK");
   }
 
   updateItemAction(req, res) {
-    res.send("OK");
+    res.json("OK");
   }
 }
 
