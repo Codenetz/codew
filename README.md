@@ -132,6 +132,7 @@ See how the model & service declarations for `example` module are done in `/src/
 
 **Migrations**
 ---
+
 Migration files must be created with this template:
 
 ```
@@ -171,6 +172,83 @@ _Usage of `/bin/migration.js`_
 
  - Call specific down action from added migrations.
 ```node bin/migration.js down "/path/to/migration"```
+
+**Controllers**
+---
+
+__Standardize response across actions.__
+
+- response. Default status code 200.
+
+res [object][required] - Express response object
+data [object][optional] - Pass data back to client. Default "{}"
+status_code [integer][optional] - Set HTTP status code. Default "200"
+
+```
+this.response(res, data, status_code);
+```
+
+- responseError. Default status code 400.
+
+res [object][required] - Express response object
+message [string][optional] - Error message. Default ""
+errors [array][optional] - Array of error objects (see "createError"). Default "[]"
+status_code [integer][optional]- Set HTTP status code. Default "400"
+
+```
+this.responseError(res, message, errors, status_code)
+```
+
+- responseBadRequest. Status code 400.
+
+res [object][required] - Express response object
+message [string][optional] - Error message. Default ""
+errors [array][optional] - Array of error objects (see "createError"). Default "[]"
+
+```
+this.responseBadRequest(res, message, errors)
+```
+
+- responseUnauthorized. Status code 401.
+
+res [object][required] - Express response object
+message [string][optional] - Error message. Default ""
+errors [array][optional] - Array of error objects (see "createError"). Default "[]"
+
+```
+this.responseBadRequest(res, message, errors)
+```
+
+- responseForbidden. Status code 403.
+
+res [object][required] - Express response object
+message [string][optional] - Error message. Default ""
+errors [array][optional] - Array of error objects (see "createError"). Default "[]"
+
+
+```
+this.responseBadRequest(res, message, errors)
+```
+
+- responseNotFound. Status code 404.
+
+res [required] - Express response object
+message [optional] - Error message. Default ""
+errors [optional] - Array of error objects (see "createError"). Default "[]"
+
+```
+this.responseBadRequest(res, message, errors)
+```
+
+- Create error objects.
+
+prop [string][required] - Error property name
+message [string][optional] - Error message. Default ""
+reason [string][optional] - Error reason. Default ""
+
+```
+createError(prop, message, reason);
+```
 
 **TODO**
 ---
