@@ -6,9 +6,11 @@ let
   invalidArgumentException = require("./../../../../src/exceptions/invalidArgumentException");
 
 class controller {
-  constructor(app) {
+  constructor(app, force_init) {
 
-    if(this.constructor.name === "controller") {
+    force_init = typeof force_init === 'undefined' ? false : force_init;
+
+    if(this.constructor.name === "controller" && force_init === false) {
       throw new Error("Controller class cannot be initialized");
     }
 
