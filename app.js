@@ -1,4 +1,6 @@
-"use strict";
+/** Load module for .env support */
+require("dotenv").config();
+
 let
   env = require("./boot/env"),
   server = require("./boot/server"),

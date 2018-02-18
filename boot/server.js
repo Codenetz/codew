@@ -30,6 +30,7 @@ drivers(app);
 modules(app);
 
 module.exports = {
+  app: app,
   beforeLoad: () => {
     return new Promise((resolve) => {
       return resolve(app);

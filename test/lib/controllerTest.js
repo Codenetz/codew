@@ -1,8 +1,8 @@
 let
   assert = require("chai").assert,
-  controllerMock = require("../test/mocks/controllerMock"),
-  responseMock = require("../test/mocks/responseMock"),
-  applicationMock = require("../test/mocks/applicationMock");
+  controllerMock = require("../mocks/controllerMock"),
+  responseMock = require("../mocks/responseMock"),
+  applicationMock = require("../mocks/applicationMock");
 
 describe("controller", function() {
 

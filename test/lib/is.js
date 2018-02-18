@@ -1,6 +1,6 @@
 let
   assert = require("chai").assert,
-  is = require("../src/utils/is");
+  is = require("../../src/utils/is");
 
 describe("is", function() {
   it("nullOrUndefined", () => {

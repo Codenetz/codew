@@ -5,17 +5,27 @@
 ---
 
 ```
-nvm install 9.4.0 
+$ nvm install 9.4.0 
 ```
 
 ```
-nvm use 9.4.0
+$ nvm use 9.4.0
 ```
 
 ```
 $ cp dist.env .env
 ```
 
+```
+$ cp dist.env.test .env.test
+```
+
+Run tests
+```
+$ npm test
+```
+
+Run express server
 ```
 $ npm start
 ```
