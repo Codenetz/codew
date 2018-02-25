@@ -1,22 +1,22 @@
 "use strict";
 
-let controller = require("./../../core/controller");
+let
+  controller = require("./../../core/controller"),
+  Boom = require('boom');
 
 class listController extends controller {
-  listAction(req, res) {
+  listAction(req, res, next) {
 
     /** Containers */
     // console.log(this.app.get("MODEL"));
     // console.log(this.app.get("SERVICE"));
 
     /** Errors */
-    // let errors = [];
-    // errors.push(this.createError("test"));
-    // errors.push(this.createError("test", "m", "r"));
-    // errors.push(this.createError("test", "m"));
-    // return this.responseBadRequest(res, "Has error", errors);
+    // return next(Boom.forbidden());
 
-    return this.response(res);
+    return this.response(res, {
+      success: true
+    });
   }
 
   createItemAction(req, res) {

@@ -9,11 +9,11 @@ module.exports = (app) => {
       request(app)
         .get('/example')
         .expect('Content-Type', /json/)
-        .expect('Content-Length', '11')
+        .expect('Content-Length', '25')
         .expect(200)
         .expect((res) => {
           let {body} = res;
-          assert.equal(JSON.stringify(body), JSON.stringify({data: {}}));
+          assert.equal(JSON.stringify(body), JSON.stringify({data: {"success": true}}));
         })
         .end(done);
     });
