@@ -4,16 +4,24 @@ let
   express = require("express"),
   morgan = require("morgan"),
   helmet = require("helmet"),
+  bodyParser = require('body-parser'),
   env = require("./env"),
   modules = require("./modules"),
   containers = require("./containers"),
   drivers = require("./drivers"),
+  errorMiddleware = require("./../src/server/middlewares/error"),
   app = express();
 
 app.set("ENV", env);
 
 /** Take care of HTTP headers to secure the app */
 app.use(helmet());
+
+/** parse application/x-www-form-urlencoded */
+app.use(bodyParser.urlencoded({ extended: false }));
+
+/** parse application/json */
+app.use(bodyParser.json());
 
 /** Loads logger on development mode */
 if (env.isDevelopment) {
@@ -28,6 +36,9 @@ drivers(app);
 
 /** Loads modules */
 modules(app);
+
+/** Loads error middleware */
+app.use("/", errorMiddleware);
 
 module.exports = {
   app: app,

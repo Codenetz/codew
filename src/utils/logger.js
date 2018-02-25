@@ -30,6 +30,14 @@ class logger {
     /* eslint-enable no-console */
   }
 
+  static rawError(value) {
+    let date = logger.getDate();
+
+    /* eslint-disable no-console */
+    console.log(logger.setColor("[" + date + "]", COLOR_RED), value);
+    /* eslint-enable no-console */
+  }
+
   static warning(value) {
     let date = logger.getDate();
 
@@ -49,5 +57,6 @@ class logger {
 
 module.exports.info = logger.info;
 module.exports.error = logger.error;
+module.exports.rawError = logger.rawError;
 module.exports.warning = logger.warning;
 module.exports.success = logger.success;
