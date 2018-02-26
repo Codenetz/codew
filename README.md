@@ -197,3 +197,7 @@ When using the command with second argument (file path), the prop is not updated
 
 - history
 Tracks all the migration history. It has props: action, query, migration_path, error, time
+
+---
+
+https://github.com/Codenetz/codew
