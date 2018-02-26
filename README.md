@@ -1,7 +1,4 @@
-**Express React boilerplate**
----
-
-**Setup**
+**Codew framework**
 ---
 
 ```
@@ -20,82 +17,17 @@ $ cp dist.env .env
 $ cp dist.env.test .env.test
 ```
 
-Run tests
+```
+$ npm install
+```
+
 ```
 $ npm test
 ```
 
-Run express server
 ```
 $ npm start
 ```
-
-**Includes**
----
-
-- https://www.npmjs.com/package/express
-- https://www.npmjs.com/package/helmet
-- https://www.npmjs.com/package/eslint
-- https://www.npmjs.com/package/eslint-plugin-react
-- https://www.npmjs.com/package/morgan
-- https://www.npmjs.com/package/dotenv
-- https://www.npmjs.com/package/mysql2
-
-**Architecture**
----
-
-_/boot_
-Holds modules for initialization the app.
-
-_/public_
-All public accessible resources like images, css, js, etc ...
-
-_/src_
-Frontend and backend source code of an application.
-
-_/src/client/_
-React frontend.
-
-_/src/server/_
-Application API.
-
-_/src/server/modules/core/controller.js_
-Each controller could extend it to get some extras.
-
-Controllers that extends the base will have the server application instance available through `this.app` 
-and all controller actions will have the current controller instance through `this`
-
-_/test_
-Test cases.
-
-_/app.js_
-Main app file
-
-_/dist.env_
-Default environment constants.
-Must copy from dist.env to .env in order to work.
- 
-_/.env_
-Environment file for describing environment specific constants.
-It could contain different values on production/development/local server.
-
-_/.eslintrc.js_
-Configurations of eslint.
-
-_/.eslintignore_
-Ignore file of eslint.
-
-_/var/migration.json_
-Tracks migration activity.
-
-Properties
-
-- latest
-The last migration done when using the automatic, up or down methods alone.
-When using the command with second argument (file path), the prop is not updated.
-
-- history
-Tracks all the migration history. It has props: action, query, migration_path, error, time
 
 **Modules**
 ---
@@ -115,7 +47,6 @@ Example of such modules could be:
 - SEO
 
 Each module has it's own MVC architecture and routes handler.
-For an example you can view `/src/server/Modules/Example` module
 
 **Containers**
 For organization purposes each container must hold class instances of same type.
@@ -186,90 +117,83 @@ _Usage of `/bin/migration.js`_
 **Controllers**
 ---
 
-__Standardize response across actions.__
+_action_ 
+Each action takes 3 parameters.
+    - req. Request object.
+    - res. Response object.
+    - next. Call next middleware.
 
-- response. Default status code 200.
-
-res [object][required] - Express response object
-data [object][optional] - Pass data back to client. Default "{}"
-status_code [integer][optional] - Set HTTP status code. Default "200"
-
-```
-this.response(res, data, status_code);
-```
-
-- responseError. Default status code 400.
-
-res [object][required] - Express response object
-message [string][optional] - Error message. Default ""
-errors [array][optional] - Array of error objects (see "createError"). Default "[]"
-status_code [integer][optional]- Set HTTP status code. Default "400"
+_response_ 
 
 ```
-this.responseError(res, message, errors, status_code)
+  /**
+   * @var object res App response object
+   * @var object data Data to be send back to client. Default {}
+   * @var integer status_code HTTP status code. Default 200
+   */
+  response(res, data, status_code)
 ```
 
-- responseBadRequest. Status code 400.
+_errors_
 
-res [object][required] - Express response object
-message [string][optional] - Error message. Default ""
-errors [array][optional] - Array of error objects (see "createError"). Default "[]"
+Errors are thrown in `next()` using the `Boom` package.
 
 ```
-this.responseBadRequest(res, message, errors)
+return next(Boom.forbidden());
 ```
 
-- responseUnauthorized. Status code 401.
-
-res [object][required] - Express response object
-message [string][optional] - Error message. Default ""
-errors [array][optional] - Array of error objects (see "createError"). Default "[]"
+_validation_
+Validations are done in `routes.js` using Joi and middleware for it.
 
 ```
-this.responseBadRequest(res, message, errors)
+let
+  Joi = require('joi'),
+  validation = require("./../../../middlewares/validation");
+
+  /** ... */
+
+  app.post("/example", validation.bind(null, Joi.object().keys({
+    username: Joi.string().alphanum().min(3).max(30).required(),
+    password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required()
+  })),
+  itemController.listAction);
 ```
 
-- responseForbidden. Status code 403.
-
-res [object][required] - Express response object
-message [string][optional] - Error message. Default ""
-errors [array][optional] - Array of error objects (see "createError"). Default "[]"
-
-
-```
-this.responseBadRequest(res, message, errors)
-```
-
-- responseNotFound. Status code 404.
-
-res [required] - Express response object
-message [optional] - Error message. Default ""
-errors [optional] - Array of error objects (see "createError"). Default "[]"
-
-```
-this.responseBadRequest(res, message, errors)
-```
-
-- Create error objects.
-
-prop [string][required] - Error property name
-message [string][optional] - Error message. Default ""
-reason [string][optional] - Error reason. Default ""
-
-```
-createError(prop, message, reason);
-```
-
-**TODO**
+**Some special paths**
 ---
-- Socket
-- Tests
-- JWT
-- Docs how can be set with nginx
-- Useful libs
-- Clean the code in `/src/server/lib/migration.js` & `/bin/migration.js`
-- Maybe think about a SQL query builder
-- API documentator
--   // Remove memory-leak warning about max listeners
-    // See: http://nodejs.org/docs/latest/api/events.html#events_emitter_setmaxlisteners_n
-    this.setMaxListeners(0);
+
+_/public_
+All public accessible resources like images, css, js, etc ...
+
+_/src_
+Frontend and backend source code of an application.
+
+_/src/server/modules/core/controller.js_
+Each controller could extend it to get some extras.
+
+Controllers that extends the base will have the server application instance available through `this.app` 
+and all controller actions will have the current controller instance through `this`
+
+_/dist.env_
+Default environment constants.
+Must copy from dist.env to .env in order to work.
+ 
+_/.env_
+Environment file for describing environment specific constants.
+It could contain different values on production/development/local server.
+
+_/.env.test
+Environment file for describing test environment specific constants.
+It could contain different values on production/development/local server.
+
+_/var/migration.json_
+Tracks migration activity.
+
+Properties
+
+- latest
+The last migration done when using the automatic, up or down methods alone.
+When using the command with second argument (file path), the prop is not updated.
+
+- history
+Tracks all the migration history. It has props: action, query, migration_path, error, time
