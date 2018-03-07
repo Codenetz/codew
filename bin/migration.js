@@ -1,6 +1,6 @@
 (async () => {
   let
-    logger = require("../src/utils/logger"),
+    logger = require("../src/server/utils/logger"),
     migrationClass = require("../src/server/lib/migration"),
     args = process.argv.slice(2),
     action = "automatic-up",

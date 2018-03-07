@@ -1,4 +1,4 @@
-let logger = require('../../utils/logger');
+let logger = require('../../server/utils/logger');
 
 module.exports = (err, req, res, next) => {
 

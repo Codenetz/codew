@@ -2,7 +2,7 @@ let
   Joi = require('joi'),
   Boom = require('boom'),
   env = require('../../../boot/env'),
-  logger = require('../../utils/logger');
+  logger = require('../../server/utils/logger');
 
 module.exports = (schema, req, res, next) => {
 

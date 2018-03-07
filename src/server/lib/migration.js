@@ -2,7 +2,7 @@ let
   fs = require("fs"),
   path = require("path"),
   appMock = require("./appMock"),
-  logger = require("../../utils/logger"),
+  logger = require("../../server/utils/logger"),
   mySQL = require("../drivers/mySQL");
 
 const MIGRATION_VAR_FILE_PATH = __dirname + "/../../../var/migration.json";

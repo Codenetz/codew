@@ -1,6 +1,6 @@
 let
-  is = require("../../utils/is"),
-  logger = require("../../utils/logger");
+  is = require("../../server/utils/is"),
+  logger = require("../../server/utils/logger");
 
 class container {
 

@@ -4,7 +4,7 @@ require("dotenv").config();
 let
   env = require("./boot/env"),
   server = require("./boot/server"),
-  logger = require("./src/utils/logger");
+  logger = require("./src/server/utils/logger");
 
 logger.warning("Starting in " + env.env + " environment");
 
