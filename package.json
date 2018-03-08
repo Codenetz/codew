@@ -19,6 +19,10 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/hristo939393/express-react-boilerplate#readme",
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-latest": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
     "chai": "^4.1.2",
     "eslint": "^4.16.0",
     "eslint-plugin-react": "^7.6.0",

@@ -39,6 +39,18 @@ const config = {
     filename: '[name].js',
     path: __dirname + '/public/assets/dist/'
   },
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: ['babel-loader']
+      }
+    ]
+  },
+  resolve: {
+    extensions: ['*', '.js', '.jsx']
+  },
   plugins: plugins,
   mode: env,
   watch: (isDevelopment)
