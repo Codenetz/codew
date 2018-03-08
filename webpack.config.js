@@ -64,7 +64,8 @@ const config = {
             {
               loader: 'stylus-loader',
               options: {
-                use: []
+                use: [require('nib')()],
+                import: ['~nib/lib/nib/index.styl']
               }
             }
           ]
