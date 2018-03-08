@@ -1,4 +1,5 @@
 import "./test.styl";
+import testJson from "./test.json";
 
 export default class {
   render() {
