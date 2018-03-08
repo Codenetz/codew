@@ -3,6 +3,8 @@ require("dotenv").config();
 
 let
   envBoot = require("./boot/env"),
+  versionClass = require("./src/server/lib/version"),
+  version = new versionClass(),
   env = envBoot.env,
   isDevelopment = envBoot.isDevelopment,
   isProduction = envBoot.isProduction,
@@ -12,7 +14,11 @@ let
 console.log(env, 'environment', "\r\n");
 
 /** Holds webpack plugins */
-var plugins = [];
+var
+  entries = {},
+  plugins = [];
+
+entries["app" + version.hash] = './src/client/index.js';
 
 plugins.push(
   new webpack.DefinePlugin({
@@ -28,9 +34,7 @@ if(isProduction) {
 }
 
 const config = {
-  entry: {
-    app: './src/client/index.js'
-  },
+  entry: entries,
   output: {
     filename: '[name].js',
     path: __dirname + '/public/assets/dist/'
