@@ -1,3 +1,5 @@
+import "./test.styl";
+
 export default class {
   render() {
 

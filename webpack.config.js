@@ -9,6 +9,7 @@ let
   isDevelopment = envBoot.isDevelopment,
   isProduction = envBoot.isProduction,
   webpack = require('webpack'),
+  ExtractTextPlugin = require("extract-text-webpack-plugin"),
   UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 console.log(env, 'environment', "\r\n");
@@ -23,6 +24,13 @@ entries["app" + version.hash] = './src/client/index.js';
 plugins.push(
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': JSON.stringify(env)
+  })
+);
+
+plugins.push(
+  new ExtractTextPlugin({
+    filename: "[name].css",
+    allChunks: true
   })
 );
 
@@ -45,11 +53,27 @@ const config = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: ['babel-loader']
+      },
+      {
+        test: /\.styl$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use:
+          [
+            'css-loader',
+            {
+              loader: 'stylus-loader',
+              options: {
+                use: []
+              }
+            }
+          ]
+        })
       }
     ]
   },
   resolve: {
-    extensions: ['*', '.js', '.jsx']
+    extensions: ['*', '.js', '.jsx', '.styl']
   },
   plugins: plugins,
   mode: env,
