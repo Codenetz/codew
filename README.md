@@ -18,6 +18,10 @@ $ cp dist.env.test .env.test
 ```
 
 ```
+$ cp dist.version .version
+```
+
+```
 $ npm install
 ```
 

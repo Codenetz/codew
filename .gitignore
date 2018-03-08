@@ -4,5 +4,6 @@
 npm-debug.log
 .env
 .env.test
+.version
 /var/migration.json
 /public/assets/dist/
