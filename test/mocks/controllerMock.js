@@ -1,4 +1,4 @@
-let controller = require("../../src/server/modules/core/controller");
+let controller = require("../../src/server/core/controller");
 
 class controllerMock extends controller {
   bindScope () {}

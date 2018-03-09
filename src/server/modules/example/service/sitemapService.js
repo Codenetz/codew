@@ -1,6 +1,6 @@
 "use strict";
 
-let service = require("./../../core/service");
+let service = require("./../../../core/service");
 
 class sitemapService extends service {
 

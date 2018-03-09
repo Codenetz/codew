@@ -34,6 +34,14 @@ containers(app);
 /** Loads drivers */
 drivers(app);
 
+/**
+ * Load static files on development mode.
+ * When on production is better to be used the front web server for serving the static files.
+ */
+if (env.isDevelopment) {
+  app.use(express.static('public'));
+}
+
 /** Loads modules */
 modules(app);
 

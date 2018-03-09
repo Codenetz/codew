@@ -1,6 +1,6 @@
 "use strict";
 let
-  logger = require("./../src/utils/logger");
+  logger = require("./../src/server/utils/logger");
 
 const
   {spawn} = require("child_process"),

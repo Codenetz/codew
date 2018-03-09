@@ -1,7 +1,7 @@
 "use strict";
 
 let
-  controller = require("./../../core/controller"),
+  controller = require("./../../../core/controller"),
   Boom = require('boom');
 
 class listController extends controller {
