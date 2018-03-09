@@ -1,4 +1,8 @@
 (async () => {
+
+  /** Load module for .env support */
+  require("dotenv").config();
+
   let
     logger = require("../src/utils/logger"),
     migrationClass = require("../src/server/lib/migration"),
