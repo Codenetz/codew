@@ -60,7 +60,13 @@ const config = {
           fallback: 'style-loader',
           use:
           [
-            'css-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                modules: true,
+                localIdentName: (isDevelopment ? '[name]__[local]___[hash:base64:5]' : '[hash:base64:5]')
+              }
+            },
             {
               loader: 'stylus-loader',
               options: {
