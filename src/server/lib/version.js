@@ -7,7 +7,8 @@ let
 class version {
 
   get hash() {
-    return shasum.update(this.current).digest('hex');
+    this._hash = this._hash ? this._hash : shasum.update(this.current).digest('hex');
+    return this._hash;
   }
 
   get current() {
