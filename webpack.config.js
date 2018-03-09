@@ -34,12 +34,32 @@ plugins.push(
   })
 );
 
-/** Loads plugins only for production env */
 if(isProduction) {
   plugins.push(
     new UglifyJsPlugin()
   );
 }
+
+let
+  stylus_loader = () => {
+    return {
+      loader: 'stylus-loader',
+      options: {
+        use: [require('nib')()],
+        import: ['~nib/lib/nib/index.styl']
+      }
+    }
+  },
+
+  css_loader = (localIdentName) => {
+    return {
+      loader: 'css-loader',
+      options: {
+        modules: true,
+        localIdentName: localIdentName
+      }
+    };
+  };
 
 const config = {
   entry: entries,
@@ -54,26 +74,27 @@ const config = {
         exclude: /node_modules/,
         use: ['babel-loader']
       },
+
       {
-        test: /\.styl$/,
+        test: /common\.styl$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use:
+            [
+              css_loader('[local]'),
+              stylus_loader()
+            ]
+        })
+      },
+
+      {
+        test: /[^common]\.styl$/,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use:
           [
-            {
-              loader: 'css-loader',
-              options: {
-                modules: true,
-                localIdentName: (isDevelopment ? '[name]__[local]___[hash:base64:5]' : '[hash:base64:5]')
-              }
-            },
-            {
-              loader: 'stylus-loader',
-              options: {
-                use: [require('nib')()],
-                import: ['~nib/lib/nib/index.styl']
-              }
-            }
+            css_loader(isDevelopment ? '[name]__[local]___[hash:base64:5]' : '[hash:base64:5]'),
+            stylus_loader()
           ]
         })
       }

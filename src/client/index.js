@@ -1,3 +1,4 @@
+import "./common.styl";
 import "./test.styl";
 import "./test2.styl";
 import testJson from "./test.json";
