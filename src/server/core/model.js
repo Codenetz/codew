@@ -1,7 +1,7 @@
 "use strict";
 
 let
-  logger = require("./../../../../src/utils/logger");
+  logger = require("./../../../src/server/utils/logger");
 
 class model {
   constructor(app, table) {

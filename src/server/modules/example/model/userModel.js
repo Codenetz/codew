@@ -1,7 +1,7 @@
 "use strict";
 
 let
-  model = require("./../../core/model"),
+  model = require("./../../../core/model"),
   {USER_TABLE} = require("../constants/tables");
 
 class userModel extends model {

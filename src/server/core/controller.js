@@ -1,9 +1,9 @@
 "use strict";
 
 let
-  logger = require("./../../../../src/utils/logger"),
-  noArgumentException = require("./../../../../src/exceptions/noArgumentException"),
-  invalidArgumentException = require("./../../../../src/exceptions/invalidArgumentException");
+  logger = require("./../../../src/server/utils/logger"),
+  noArgumentException = require("./../../../src/exceptions/noArgumentException"),
+  invalidArgumentException = require("./../../../src/exceptions/invalidArgumentException");
 
 class controller {
   constructor(app, force_init) {
