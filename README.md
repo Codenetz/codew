@@ -33,6 +33,24 @@ $ npm test
 $ npm start
 ```
 
+```
+$ npm run webpack
+```
+
+**Version**
+---
+
+`.version` holds current software version.
+
+Used when
+- building client side assets
+- git tagging
+- referencing
+
+Format is `{major}.{minor}.{patch}`
+
+Updating the version can be done from `node bin/version.js`
+
 **Modules**
 ---
 
