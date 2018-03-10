@@ -5,6 +5,14 @@ let
   Boom = require('boom');
 
 class listController extends controller {
+
+  uploadItemAction(req, res, next) {
+    return this.response(res, {
+      item: req.file,
+      check: req.body.check
+    });
+  }
+
   listAction(req, res, next) {
 
     /** Containers */

@@ -181,6 +181,19 @@ let
   itemController.listAction);
 ```
 
+**File upload**
+---
+File upload is done using `https://www.npmjs.com/package/multer`
+
+Example of how to use it.
+```
+  app.post('/example-image',
+    app.get("multer").single('image'),
+    itemController.uploadItemAction
+  );
+```
+
+
 **Some special paths**
 ---
 
