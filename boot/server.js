@@ -9,6 +9,7 @@ let
   modules = require("./modules"),
   containers = require("./containers"),
   drivers = require("./drivers"),
+  multer  = require('multer'),
   errorMiddleware = require("./../src/server/middlewares/error"),
   app = express();
 
@@ -27,6 +28,8 @@ app.use(bodyParser.json());
 if (env.isDevelopment) {
   app.use(morgan("combined"));
 }
+
+app.set("multer", multer({ dest: 'public/uploads/' }));
 
 /** Loads containers */
 containers(app);
