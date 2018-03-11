@@ -51,6 +51,8 @@ Format is `{major}.{minor}.{patch}`
 
 Updating the version can be done from `node bin/version.js`
 
+The version object can be accessed with `app.get("VERSION")` on server
+
 **Modules**
 ---
 
