@@ -19,8 +19,8 @@ var
   entries = {},
   plugins = [];
 
-entries["app" + version.hash] = './src/client/desktop/app.js';
-entries["appmobile" + version.hash] = './src/client/mobile/app.js';
+entries["app" + version.hash] = './src/client/desktop/App.js';
+entries["appmobile" + version.hash] = './src/client/mobile/App.js';
 
 plugins.push(
   new webpack.DefinePlugin({
