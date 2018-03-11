@@ -9,10 +9,14 @@ let
   modules = require("./modules"),
   containers = require("./containers"),
   drivers = require("./drivers"),
+  multer  = require('multer'),
   errorMiddleware = require("./../src/server/middlewares/error"),
+  clientMiddleware = require("./../src/server/middlewares/client"),
+  version = require("./../src/server/lib/version"),
   app = express();
 
 app.set("ENV", env);
+app.set("VERSION", new version());
 
 /** Take care of HTTP headers to secure the app */
 app.use(helmet());
@@ -27,6 +31,11 @@ app.use(bodyParser.json());
 if (env.isDevelopment) {
   app.use(morgan("combined"));
 }
+
+app.set("multer", multer({ dest: 'public/uploads/' }));
+
+app.set('views', './src/client/views');
+app.set('view engine', 'ejs');
 
 /** Loads containers */
 containers(app);
@@ -44,6 +53,8 @@ if (env.isDevelopment) {
 
 /** Loads modules */
 modules(app);
+
+app.get("*", clientMiddleware);
 
 /** Loads error middleware */
 app.use("/", errorMiddleware);

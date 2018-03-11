@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import "./common/style/common.styl";
-import example from "./common/components/example"
+import Example from "./common/components/Example"
 
-class app extends React.Component {
+class App extends React.Component {
   render() {
 
     let exampleArrowFunction = (v) => {
@@ -12,10 +12,10 @@ class app extends React.Component {
 
     return (
       <div>
-        <example />
+        <Example />
       </div>
     )
   }
 }
 
-ReactDOM.render(<app />, document.getElementById('react-container'));
+ReactDOM.render(<App />, document.getElementById('react-container'));

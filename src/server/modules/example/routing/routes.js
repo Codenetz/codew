@@ -15,4 +15,9 @@ module.exports = (app) => {
     password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required()
   })),
   itemController.listAction);
+
+  app.post('/example-image',
+    app.get("multer").single('image'),
+    itemController.uploadItemAction
+  );
 };

@@ -51,6 +51,8 @@ Format is `{major}.{minor}.{patch}`
 
 Updating the version can be done from `node bin/version.js`
 
+The version object can be accessed with `app.get("VERSION")` on server
+
 **Modules**
 ---
 
@@ -180,6 +182,19 @@ let
   })),
   itemController.listAction);
 ```
+
+**File upload**
+---
+File upload is done using `https://www.npmjs.com/package/multer`
+
+Example of how to use it.
+```
+  app.post('/example-image',
+    app.get("multer").single('image'),
+    itemController.uploadItemAction
+  );
+```
+
 
 **Some special paths**
 ---

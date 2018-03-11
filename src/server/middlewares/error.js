@@ -7,8 +7,9 @@ module.exports = (err, req, res, next) => {
   }
 
   if(!err.output) {
-    return res.status(err.status).json({
-      "statusCode": err.status
+    logger.rawError(err);
+    return res.status(400).json({
+      "statusCode": 400
     });
   }
 
