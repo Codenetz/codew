@@ -1,5 +1,25 @@
-**Codew framework**
+**Codew**
 ---
+Full-stack JavaScript framework build on top of [Express](https://expressjs.com/) with [MySQL](https://www.mysql.com/) database support and [React](https://reactjs.org/) for the user interface.
+
+**Prerequisites**
+---
+Dependencies:
+- [Node.js](https://nodejs.org/en/) >= 9.4.0
+- [MySQL](https://www.mysql.com/)
+
+If you not familiar with [Express](https://expressjs.com/) it will be a good starting point to start from their documentation.
+
+**Installation**
+---
+
+Clone repository in folder `codew`
+```
+git clone git@github.com:Codenetz/codew.git codew
+```
+
+Running the project requires `node >= 9.4.0`.
+You could download [NVM](https://github.com/creationix/nvm) and use it like this:
 
 ```
 $ nvm install 9.4.0 
@@ -8,30 +28,66 @@ $ nvm install 9.4.0
 ```
 $ nvm use 9.4.0
 ```
+ 
+or if you have already installed required `node` you can continue to next step.
+
+---
+
+Setup environment with copying `dist.env` file to `.env`
+`.env` file is marked in `.gitignore` so this way each environment will have it's own specific configurations.
 
 ```
 $ cp dist.env .env
 ```
 
+The test environment is used when running tests. For example you could have different database configurations if you don't want your tests to mess-up your application database.
+
 ```
 $ cp dist.env.test .env.test
 ```
+
+---
+
+Read [Version](#version) section
 
 ```
 $ cp dist.version .version
 ```
 
+---
+
+Install all need it dependencies.
+
 ```
 $ npm install
 ```
+
+---
+
+This command will run the framework tests to make sure everything works correctly.
+
+_You could skip this command if you like._
 
 ```
 $ npm test
 ```
 
+---
+
+Fire it up
+
 ```
 $ npm start
 ```
+
+The application should now run with the configurations set in `.env`
+
+---
+
+This command will build front-end assets from the example react source code in `./src/client`.
+You could read more about it in [React](#react) section below.
+
+_You could skip this command if you like._
 
 ```
 $ npm run webpack
