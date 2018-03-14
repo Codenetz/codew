@@ -19,27 +19,12 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/hristo939393/express-react-boilerplate#readme",
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.4",
-    "babel-preset-latest": "^6.24.1",
-    "babel-preset-react": "^6.24.1",
     "chai": "^4.1.2",
-    "css-loader": "^0.28.10",
     "eslint": "^4.16.0",
     "eslint-plugin-react": "^7.6.0",
-    "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "mocha": "^5.0.1",
     "morgan": "^1.9.0",
-    "nib": "^1.1.2",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "style-loader": "^0.20.2",
-    "stylus": "^0.54.5",
-    "stylus-loader": "^3.0.2",
-    "supertest": "^3.0.0",
-    "uglifyjs-webpack-plugin": "^1.2.2",
-    "webpack": "^4.1.1",
-    "webpack-cli": "^2.0.10"
+    "supertest": "^3.0.0"
   },
   "dependencies": {
     "body-parser": "^1.18.2",
@@ -50,6 +35,21 @@
     "helmet": "^3.9.0",
     "joi": "^13.1.2",
     "multer": "^1.3.0",
-    "mysql2": "^1.5.1"
+    "mysql2": "^1.5.1",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-latest": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "css-loader": "^0.28.10",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "nib": "^1.1.2",
+    "style-loader": "^0.20.2",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.2",
+    "uglifyjs-webpack-plugin": "^1.2.2",
+    "webpack": "^4.1.1",
+    "webpack-cli": "^2.0.10",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0"
   }
 }
