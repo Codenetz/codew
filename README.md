@@ -2,6 +2,14 @@
 ---
 Full-stack JavaScript framework build on top of [Express](https://expressjs.com/) with [MySQL](https://www.mysql.com/) database support and [React](https://reactjs.org/) for the user interface.
 
+[Prerequisites](#prerequisites)
+[Installation](#installation)
+[Version](#version)
+[Async/await](#async-await)
+[Modules](#modules)
+[Containers](#containers)
+
+
 **Prerequisites**
 ---
 Dependencies:
@@ -87,7 +95,7 @@ The application should now run with the configurations set in `.env`
 This command will build front-end assets from the example react source code in `./src/client`.
 You could read more about it in [React](#react) section below.
 
-_You could skip this command if you like._
+_You could skip this command if you don't need._
 
 ```
 $ npm run webpack
@@ -96,28 +104,38 @@ $ npm run webpack
 **Version**
 ---
 
-`.version` holds current software version.
+The`.version` file in the root directory of the project contains current application version.
 
-Used when
-- building client side assets
-- git tagging
-- referencing
+- One usage of the version is when the client side assets are build and later for calling those assets from the main index file, the assets file names are a hash representation of the version. This way you don't need to worry about the browser cache when you have a code update.
 
-Format is `{major}.{minor}.{patch}`
+- Another usage could be for automatic git tagging. For example a deploy script can be created which can automatically increase current version using the `node bin/version.js` command and tag a version in git based on the `.version` file.
 
-Updating the version can be done from `node bin/version.js`
+- Aways know what is the current application version.
 
-The version object can be accessed with `app.get("VERSION")` on server
+Version format is `{major}.{minor}.{patch}`
+
+Updating the version can be done from `node bin/version.js`. It takes one argument.
+Possible arguments can be 
+- `show` Prints current application version and it's hash
+- `major` Updates the major version by "1"
+- `minor` Updates the minor version by "1"
+- `patch` Updates the patch version by "1"
+
+If you need to get current version somewhere in your application it can be done accessed with `app.get("VERSION")`
+
+**Async/await**
+---
+In order to keep the code simple & readable the framework it's written promise based with `async` and `await`.
+
 
 **Modules**
 ---
-
-The server is built up only from modules.
-Advantages: 
+The application backend is built up from modules which gives those benefits:
 - Code reuse between projects
 - Logic separation
 - More organized code
 - Easy picking of which module to enable
+- Human readable application
  
 Example of such modules could be:
 - User
@@ -126,9 +144,53 @@ Example of such modules could be:
 - Chat
 - SEO
 
-Each module has it's own MVC architecture and routes handler.
+Each module has it's own structure of `controllers`, `services`, `models`, `migrations` and `routes` handler, so with it's organized code it could easily be moved around different projects and maintained easy.
+
+---
+
+Creating a module.
+
+Basic module structure.
+```
+├── constants
+│   └── tables.js
+│
+├── controller
+│   └── itemController.js
+│
+├── migrations
+│   ├── add_default_user.js
+│   ├── add_field_name.js
+│   └── create_user_table.js
+│
+├── model
+│   └── itemModel.js
+│
+├── routing
+│   └── routes.js
+│
+├── service
+│   └── exampleService.js
+│
+├── models.js
+├── example.js
+└── services.js
+```
+
+`/constants` - Keeps all your module constants on one place. It could contain for example `table names`, `endpoints`, `payment methods`, `error codes` and so on. 
+`/controller` - Contains classes ([controllers](#controllers) that handles the client request and server response in their methods (actions).
+`/migrations` - Database [migration](#migrations) files.
+`/model` - Contains classes (models) that handle part of the business logic and interaction with the database.
+`/routing` - Described all module endpoints.
+`/service` - Contains classes ([SERVICES](#service)) that handle business logic.
+`models.js` - Used to declare module models.
+`example.js` - Module entry file.
+`services.js` - Used to declare services.
+
+Module declaration is done in `src/server/modules.json`
 
 **Containers**
+---
 For organization purposes each container must hold class instances of same type.
 
 Containers:
