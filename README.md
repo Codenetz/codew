@@ -2,19 +2,20 @@
 ---
 Full-stack JavaScript framework build on top of [Express](https://expressjs.com/) with [MySQL](https://www.mysql.com/) database support and [React](https://reactjs.org/) for the user interface.
 
-[Prerequisites](#prerequisites)
-[Installation](#installation)
-[Version](#version)
-[Async/await](#async-await)
-[Modules](#modules)
-[Containers](#containers)
+* [Prerequisites](#prerequisites)
+* [Installation](#installation)
+* [Version](#version)
+* [Async/await](#async-await)
+* [Modules](#modules)
+* [Containers](#containers)
 
 
 **Prerequisites**
 ---
 Dependencies:
-- [Node.js](https://nodejs.org/en/) >= 9.4.0
-- [MySQL](https://www.mysql.com/)
+
+* [Node.js](https://nodejs.org/en/) >= 9.4.0
+* [MySQL](https://www.mysql.com/)
 
 If you not familiar with [Express](https://expressjs.com/) it will be a good starting point to start from their documentation.
 
@@ -106,20 +107,21 @@ $ npm run webpack
 
 The`.version` file in the root directory of the project contains current application version.
 
-- One usage of the version is when the client side assets are build and later for calling those assets from the main index file, the assets file names are a hash representation of the version. This way you don't need to worry about the browser cache when you have a code update.
+* One usage of the version is when the client side assets are build and later for calling those assets from the main index file, the assets file names are a hash representation of the version. This way you don't need to worry about the browser cache when you have a code update.
 
-- Another usage could be for automatic git tagging. For example a deploy script can be created which can automatically increase current version using the `node bin/version.js` command and tag a version in git based on the `.version` file.
+* Another usage could be for automatic git tagging. For example a deploy script can be created which can automatically increase current version using the `node bin/version.js` command and tag a version in git based on the `.version` file.
 
-- Aways know what is the current application version.
+* Aways know what is the current application version.
 
 Version format is `{major}.{minor}.{patch}`
 
 Updating the version can be done from `node bin/version.js`. It takes one argument.
 Possible arguments can be 
-- `show` Prints current application version and it's hash
-- `major` Updates the major version by "1"
-- `minor` Updates the minor version by "1"
-- `patch` Updates the patch version by "1"
+
+* `show` Prints current application version and it's hash
+* `major` Updates the major version by "1"
+* `minor` Updates the minor version by "1"
+* `patch` Updates the patch version by "1"
 
 If you need to get current version somewhere in your application it can be done accessed with `app.get("VERSION")`
 
@@ -131,18 +133,20 @@ In order to keep the code simple & readable the framework it's written promise b
 **Modules**
 ---
 The application backend is built up from modules which gives those benefits:
-- Code reuse between projects
-- Logic separation
-- More organized code
-- Easy picking of which module to enable
-- Human readable application
+
+* Code reuse between projects
+* Logic separation
+* More organized code
+* Easy picking of which module to enable
+* Human readable application
  
 Example of such modules could be:
-- User
-- Forum
-- Shop
-- Chat
-- SEO
+
+* User
+* Forum
+* Shop
+* Chat
+* SEO
 
 Each module has it's own structure of `controllers`, `services`, `models`, `migrations` and `routes` handler, so with it's organized code it could easily be moved around different projects and maintained easy.
 
@@ -177,15 +181,15 @@ Basic module structure.
 └── services.js
 ```
 
-`/constants` - Keeps all your module constants on one place. It could contain for example `table names`, `endpoints`, `payment methods`, `error codes` and so on. 
-`/controller` - Contains classes ([controllers](#controllers) that handles the client request and server response in their methods (actions).
-`/migrations` - Database [migration](#migrations) files.
-`/model` - Contains classes (models) that handle part of the business logic and interaction with the database.
-`/routing` - Described all module endpoints.
-`/service` - Contains classes ([SERVICES](#service)) that handle business logic.
-`models.js` - Used to declare module models.
-`example.js` - Module entry file.
-`services.js` - Used to declare services.
+* `/constants` - Keeps all your module constants on one place. It could contain for example `table names`, `endpoints`, `payment methods`, `error codes` and so on. 
+* `/controller` - Contains classes ([controllers](#controllers) that handles the client request and server response in their methods (actions).
+* `/migrations` - Database [migration](#migrations) files.
+* `/model` - Contains classes (models) that handle part of the business logic and interaction with the database.
+* `/routing` - Described all module endpoints.
+* `/service` - Contains classes ([SERVICES](#service)) that handle business logic.
+* `models.js` - Used to declare module models.
+* `example.js` - Module entry file.
+* `services.js` - Used to declare services.
 
 Module declaration is done in `src/server/modules.json`
 
@@ -195,10 +199,10 @@ For organization purposes each container must hold class instances of same type.
 
 Containers:
 
-- `MODEL`
+*  `MODEL`
 Holds all model objects from all modules. For example: UserModel, PersonModel, etc ...
 
-- `SERVICE`
+*  `SERVICE`
 Holds useful objects like siteMapService (generating sitemaps), mailService (sending emails), etc ...
 
 _How to create custom container?_
@@ -241,19 +245,19 @@ An array of migration file paths. The last item (at bottom) is the newest, so th
  
 _Usage of `/bin/migration.js`_
 
- - Automatically call up action of __all__ newly added migrations
+ *  Automatically call up action of __all__ newly added migrations
 ```node bin/migration.js``` Top to bottom.
 
- - Call next up action from newly added migrations. Only 1 at a time is called. Top to bottom.
+ *  Call next up action from newly added migrations. Only 1 at a time is called. Top to bottom.
 ```node bin/migration.js up```
 
- - Call specific up action from added migrations.
+ *  Call specific up action from added migrations.
 ```node bin/migration.js up "/path/to/migration"```
 
- - Call next down action from newly added migrations. Only 1 at a time is called. Bottom to top.
+ *  Call next down action from newly added migrations. Only 1 at a time is called. Bottom to top.
 ```node bin/migration.js down```
 
- - Call specific down action from added migrations.
+ *  Call specific down action from added migrations.
 ```node bin/migration.js down "/path/to/migration"```
 
 **Controllers**
@@ -261,9 +265,10 @@ _Usage of `/bin/migration.js`_
 
 _action_ 
 Each action takes 3 parameters.
-    - req. Request object.
-    - res. Response object.
-    - next. Call next middleware.
+
+    *  req. Request object.
+    *  res. Response object.
+    *  next. Call next middleware.
 
 _response_ 
 
@@ -346,11 +351,11 @@ Tracks migration activity.
 
 Properties
 
-- latest
+*  latest
 The last migration done when using the automatic, up or down methods alone.
 When using the command with second argument (file path), the prop is not updated.
 
-- history
+*  history
 Tracks all the migration history. It has props: action, query, migration_path, error, time
 
 ---
