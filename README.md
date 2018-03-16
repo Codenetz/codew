@@ -17,18 +17,18 @@ Dependencies:
 * [Node.js](https://nodejs.org/en/) >= 9.4.0
 * [MySQL](https://www.mysql.com/)
 
-If you not familiar with [Express](https://expressjs.com/) it will be a good starting point to start from their documentation.
+If you are not familiar with [Express](https://expressjs.com/) their documentation will be a good starting point.
 
 **Installation**
 ---
 
-Clone repository in folder `codew`
+Clone the repository in folder `codew`
 ```
 git clone git@github.com:Codenetz/codew.git codew
 ```
 
 Running the project requires `node >= 9.4.0`.
-You could download [NVM](https://github.com/creationix/nvm) and use it like this:
+You can download [NVM](https://github.com/creationix/nvm) and use it like this:
 
 ```
 $ nvm install 9.4.0 
@@ -38,18 +38,18 @@ $ nvm install 9.4.0
 $ nvm use 9.4.0
 ```
  
-or if you have already installed required `node` you can continue to next step.
+or if you have already installed the required `node` version you can continue to the next step.
 
 ---
 
-Setup environment with copying `dist.env` file to `.env`
-`.env` file is marked in `.gitignore` so this way each environment will have it's own specific configurations.
+Setup the environment copying `dist.env` file to `.env`
+`.env` file is excluded in `.gitignore` so that each environment will have it's own specific configurations.
 
 ```
 $ cp dist.env .env
 ```
 
-The test environment is used when running tests. For example you could have different database configurations if you don't want your tests to mess-up your application database.
+The test environment is used when running tests. For example you can have different database configurations if you don't want your tests to mess-up your application database.
 
 ```
 $ cp dist.env.test .env.test
@@ -65,7 +65,7 @@ $ cp dist.version .version
 
 ---
 
-Install all need it dependencies.
+Install all needed dependencies.
 
 ```
 $ npm install
@@ -75,7 +75,7 @@ $ npm install
 
 This command will run the framework tests to make sure everything works correctly.
 
-_You could skip this command if you like._
+_You can skip this command if you like._
 
 ```
 $ npm test
@@ -93,10 +93,10 @@ The application should now run with the configurations set in `.env`
 
 ---
 
-This command will build front-end assets from the example react source code in `./src/client`.
-You could read more about it in [React](#react) section below.
+This command will build front-end assets from `./src/client/`.
+You can read more about it in [React](#react) section below.
 
-_You could skip this command if you don't need._
+_You can skip this command if you don't need._
 
 ```
 $ npm run webpack
@@ -105,54 +105,52 @@ $ npm run webpack
 **Version**
 ---
 
-The`.version` file in the root directory of the project contains current application version.
+The `.version` file in the root directory of the project contains current application version using the following format `{major}.{minor}.{patch}`.
 
-* One usage of the version is when the client side assets are build and later for calling those assets from the main index file, the assets file names are a hash representation of the version. This way you don't need to worry about the browser cache when you have a code update.
+Used when:
 
-* Another usage could be for automatic git tagging. For example a deploy script can be created which can automatically increase current version using the `node bin/version.js` command and tag a version in git based on the `.version` file.
+* Modifying the assets file names using hash representation of the version number to avoid caching them in the browser after editing the code.
 
-* Aways know what is the current application version.
+Can also be used for:
 
-Version format is `{major}.{minor}.{patch}`
+* Automatic git tagging.
+A deploy script can be created to automatically increase the current version using the command `node bin/version.js` and also create a tag in the git repository based on the `.version` file.
+* Keeping track of current application version.
 
-Updating the version can be done from `node bin/version.js`. It takes one argument.
-Possible arguments can be 
+---
+
+Updating the application version can be done using the command `node bin/version.js` which takes one of the following arguments:
 
 * `show` Prints current application version and it's hash
 * `major` Updates the major version by "1"
 * `minor` Updates the minor version by "1"
 * `patch` Updates the patch version by "1"
 
-If you need to get current version somewhere in your application it can be done accessed with `app.get("VERSION")`
+Current version can be accessed using `app.get("VERSION")`, anywhere within your application.
 
 **Async/await**
 ---
-In order to keep the code simple & readable the framework it's written promise based with `async` and `await`.
+In order to keep the code simple & readable the framework is written with `async` and `await` Promise-based approach.
 
 
 **Modules**
 ---
 The application backend is built up from modules which gives those benefits:
 
-* Code reuse between projects
+* Reusable code
 * Logic separation
-* More organized code
-* Easy picking of which module to enable
-* Human readable application
+* Better code organization
+* Ability to enable modules easily
+* Human readable source code
  
-Example of such modules could be:
+Example of such modules can be `User`, `Forum`, `ShoppingCart`, `Chat` etc. 
 
-* User
-* Forum
-* Shop
-* Chat
-* SEO
-
-Each module has it's own structure of `controllers`, `services`, `models`, `migrations` and `routes` handler, so with it's organized code it could easily be moved around different projects and maintained easy.
 
 ---
 
 Creating a module.
+
+Each module has its own structure of `controllers`, `services`, `models`, `migrations` and `routes`, so with its organized code it could easily be maintained and moved around different projects.
 
 Basic module structure.
 ```
@@ -181,17 +179,17 @@ Basic module structure.
 └── services.js
 ```
 
-* `/constants` - Keeps all your module constants on one place. It could contain for example `table names`, `endpoints`, `payment methods`, `error codes` and so on. 
-* `/controller` - Contains classes ([controllers](#controllers) that handles the client request and server response in their methods (actions).
+* `/constants` - Keeps all your module constants in one place. For example it can contain `table names`, `endpoints`, `payment methods`, `error codes` and so on.
+* `/controller` - Contains classes ([controllers](#controllers) handling the client request and server response.
 * `/migrations` - Database [migration](#migrations) files.
-* `/model` - Contains classes (models) that handle part of the business logic and interaction with the database.
-* `/routing` - Described all module endpoints.
-* `/service` - Contains classes ([SERVICES](#service)) that handle business logic.
-* `models.js` - Used to declare module models.
-* `example.js` - Module entry file.
-* `services.js` - Used to declare services.
+* `/model` - Contains classes ([models](#models)) handling part of the business logic and interactions with the database.
+* `/routing` - Describes all module specific endpoints.
+* `/service` - Contains classes ([services](#service)) handling business logic.
+* `models.js` - Used to declare modules' models.
+* `services.js` - Used to declare modules' services.
+* `example.js` - Entry file that must be declared in `src/server/modules.json` in order to load the module.
 
-Module declaration is done in `src/server/modules.json`
+
 
 **Containers**
 ---
@@ -318,6 +316,8 @@ Example of how to use it.
   );
 ```
 
+**Recommends**
+- Usage of [async and await](#async-await)
 
 **Some special paths**
 ---
