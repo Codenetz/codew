@@ -7,8 +7,13 @@ Full-stack JavaScript framework build on top of [Express](https://expressjs.com/
 * [Version](#version)
 * [Async/await](#async-await)
 * [Modules](#modules)
+* [Services](#services)
+* [Models](#models)
+* [Controllers](#controllers)
 * [Containers](#containers)
-
+* [File upload](#file-upload)
+* [Migrations](#migrations)
+* [Webpack](#webpack)
 
 **Prerequisites**
 ---
@@ -94,7 +99,7 @@ The application should now run with the configurations set in `.env`
 ---
 
 This command will build front-end assets from `./src/client/`.
-You can read more about it in [React](#react) section below.
+You can read more about it in [Webpack](#webpack) section below.
 
 _You can skip this command if you don't need._
 
@@ -189,106 +194,126 @@ Basic module structure.
 * `services.js` - Used to declare modules' services.
 * `example.js` - Entry file that must be declared in `src/server/modules.json` in order to load the module.
 
-
-
-**Containers**
+**Services**
 ---
-For organization purposes each container must hold class instances of same type.
+A service is a useful object for example `MailService` which can be used for sending emails or `ImageService` for processing images.
 
-Containers:
+A service registration can be made by using the `SERVICE` [container](#containers).
+First a class instance must be made with all required arguments and then registered in the container.
 
-*  `MODEL`
-Holds all model objects from all modules. For example: UserModel, PersonModel, etc ...
+```
+app.get("SERVICE").set(new ImageService(app));
+```
 
-*  `SERVICE`
-Holds useful objects like siteMapService (generating sitemaps), mailService (sending emails), etc ...
+Service is accessed from the `SERVICE` container.
 
-_How to create custom container?_
+```
+app.get("SERVICE").get("ImageService");
+```
 
-1. Create container class in `/src/server/containers/`
-2. Link the new class in `/src/server/containers.json`
+This will return `ImageService` object registered earlier.
+No matter how much times a service is requested it will always return object from same reference.
 
-That's all.
+```
+app.get("SERVICE").get("ImageService"); //from ref 1
+app.get("SERVICE").get("ImageService"); //from ref 1
+app.get("SERVICE").get("ImageService"); //from ref 1
+```
 
-_How to add objects to containers?_
+Benefits using services:
 
-See how the model & service declarations for `example` module are done in `/src/server/modules/example/example.js` 
+* No need to require additional modules in your files.
+* Promotes good architecture.
+* No need to instantiate a class everytime you need it. You already have it in the container ready for use.
+* Easy access to your useful classes anywhere in the application.
 
-
-**Migrations**
+**Models**
 ---
+They are responsible for the database access and the business logic with the help of [services](#services).
 
-Migration files must be created with this template:
-
-```
-module.exports = {
-  up: "SQL COMMAND",
-  down: "SQL COMMAND FOR REVERSE"
-};
-```
-
-_Example_
+A model registration can be made by using the `MODEL` [container](#containers).
+First a class instance must be made with all required arguments and then registered in the container.
 
 ```
-let {USER_TABLE} = require("../constants/tables");
-
-module.exports = {
-  up: "ALTER TABLE " + USER_TABLE + " ADD COLUMN fname VARCHAR(30);",
-  down: "ALTER TABLE " + USER_TABLE + " DROP COLUMN fname;"
-};
+app.get("MODEL").set(new UserModel(app));
 ```
 
-_What is `/src/server/migrations.json`_ 
-An array of migration file paths. The last item (at bottom) is the newest, so the queries will be executed from top to bottom.
- 
-_Usage of `/bin/migration.js`_
+Model is accessed from the `MODEL` container.
 
- *  Automatically call up action of __all__ newly added migrations
-```node bin/migration.js``` Top to bottom.
+```
+app.get("MODEL").get("UserModel");
+```
 
- *  Call next up action from newly added migrations. Only 1 at a time is called. Top to bottom.
-```node bin/migration.js up```
+This will return `UserModel` object registered earlier.
+No matter how much times a service is requested it will always return object from same reference.
 
- *  Call specific up action from added migrations.
-```node bin/migration.js up "/path/to/migration"```
+Notice:
 
- *  Call next down action from newly added migrations. Only 1 at a time is called. Bottom to top.
-```node bin/migration.js down```
-
- *  Call specific down action from added migrations.
-```node bin/migration.js down "/path/to/migration"```
+* Each application model must extend the base model class `src/server/core/model`.
+* Use models from the `MODEL` [container](#containers) avoid doing model instantiation if not necessary, this must be done only on server boot time.
+* Never pass not validated data to the model.
 
 **Controllers**
 ---
 
-_action_ 
+Processing client request and returning appropriate response. A controller is composite from actions.
+
 Each action takes 3 parameters.
 
-    *  req. Request object.
-    *  res. Response object.
-    *  next. Call next middleware.
+*  req. Request object.
+*  res. Response object.
+*  next. Function for calling next middleware.
 
-_response_ 
+
+***Request***
+
+Commonly used properties:
+
+* req.file/s - Client uploaded files. See [files](#file-upload)
+* req.query - Query parameters. `?example=1`
+* req.body - Client POST/PUT data
+* req.params - URL parameters. `/example/:id`
+
+***Response***
+
+After extending the base controller class a method called `response` will be available.
+It is used for standardizing the response.
 
 ```
   /**
-   * @var object res App response object
+   * @var object res Action response object
    * @var object data Data to be send back to client. Default {}
    * @var integer status_code HTTP status code. Default 200
    */
   response(res, data, status_code)
 ```
 
-_errors_
+The usage of it will be like this:
 
-Errors are thrown in `next()` using the `Boom` package.
+```
+    return this.response(res, {
+        items: []
+    });
+```
+
+***Error***
+
+The error response is standardized from a middleware located in `src/server/middlewares/error.js`
+An error could be thrown by using the `next()` and passing a `Boom` error as an argument.
 
 ```
 return next(Boom.forbidden());
 ```
 
-_validation_
-Validations are done in `routes.js` using Joi and middleware for it.
+Unhandled errors or errors thrown without `Boom` will be processed from the middleware passing `400 Bad Request.` to client and response data.
+
+```
+"statusCode": 400
+```
+
+***Validation***
+
+Client input data validation is done in the routes file as a middleware using `Joi`.
 
 ```
 let
@@ -297,66 +322,216 @@ let
 
   /** ... */
 
-  app.post("/example", validation.bind(null, Joi.object().keys({
-    username: Joi.string().alphanum().min(3).max(30).required(),
-    password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required()
-  })),
+  app.post(
+  "/sign-in", 
+  
+  validation.bind(
+    null,
+    Joi.object().keys({
+        username: Joi.string().alphanum().min(3).max(30).required(),
+        password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required()
+    }),
+    "body"
+  ),
+  
   itemController.listAction);
 ```
 
+When adding validation you are passing two arguments.
+
+* Joi schema
+* Where to look for the client data that must be validated.
+  Possible values are: `body`, `query`, `params`
+
+***Multiple validation***
+Different type (`body`, `query`, `params`) validations can be set for a route.
+
+```
+let
+  Joi = require('joi'),
+  validation = require("./../../../middlewares/validation");
+
+  /** ... */
+
+  app.post(
+  "/sign-in", 
+  
+  validation.bind(
+    null,
+    Joi.object().keys({
+      sid: Joi.string().required()
+    }),
+    "query"
+  ),
+  
+  validation.bind(
+    null,
+    Joi.object().keys({
+        username: Joi.string().alphanum().min(3).max(30).required(),
+        password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required()
+    }),
+    "body"
+  ),
+    
+  itemController.listAction);
+```
+
+so in order to enter `listAction` first the request must have a query parameter `sid` and post data that have `username` and `password` in it.
+
+```
+[POST] /sign-in?sid=xxx
+username=someone
+password=passw0rD
+```
+
+**Containers**
+---
+Container is a registry for objects from a certain type under one domain and by using it you don't need to import and instantiate any modules.
+
+***Usage***
+
+By default the framework comes with 2 containers.
+
+*  `MODEL` References of [models](#models).
+
+Setting an object in `MODEL` is done by:
+```
+app.get("MODEL").set(new ExampleModel(app);
+```
+
+And getting an object from `MODEL`:
+```
+app.get("MODEL").get("ExampleModel");
+```
+
+*  `SERVICE` References of [services](#services)
+
+Setting an object in `SERVICE` is done by:
+```
+app.get("SERVICE").set(new ExampleService(app);
+```
+
+And getting an object from `SERVICE`:
+```
+app.get("SERVICE").get("ExampleService");
+```
+
+***Creating a container***
+
+Creating and setting up a container doesn't take much effort.
+
+First you need to create your container class in `/src/server/containers/`:
+```
+let container = require("./container");
+
+class ExampleContainer extends container {
+  constructor(app) {
+    super(app);
+    this.container_name = "EXAMPLE";
+  }
+}
+
+module.exports = ExampleContainer;
+```
+
+Extend the base container class and set `this.container_name` property with a name used later for accessing the container with `app.get("EXAMPLE")`.
+Additionally you can implement your own methods and use them like that `app.get("EXAMPLE").myCustomMethod()`.
+
+After the container is ready it is time to register it in `/src/server/containers.json`. 
+The common way to use a container is in a module entry file.
+
 **File upload**
 ---
-File upload is done using `https://www.npmjs.com/package/multer`
+Uploading is done using `https://www.npmjs.com/package/multer`.
+Configuration can be found in `/boot/server.js`.
 
-Example of how to use it.
+Enable file upload for specific route with multer middleware.
 ```
   app.post('/example-image',
     app.get("multer").single('image'),
     itemController.uploadItemAction
   );
 ```
+___Be aware that the send request must be `multipart/form-data`.___
 
-**Recommends**
-- Usage of [async and await](#async-await)
+After the request is send the newly uploaded files are saved in `/public/uploads/` directory 
+and multer adds an object (`file`/`files`) to current request containing info data for the file. 
+See [request](#request)
 
-**Some special paths**
+**Migrations**
 ---
 
-_/public_
-All public accessible resources like images, css, js, etc ...
+Keep database changes in control between environments.
 
-_/src_
-Frontend and backend source code of an application.
+Writing a migration:
+```
+module.exports = {
+  up: "SQL COMMAND",
+  down: "SQL ROLLBACK COMMAND"
+};
+```
 
-_/src/server/modules/core/controller.js_
-Each controller could extend it to get some extras.
-
-Controllers that extends the base will have the server application instance available through `this.app` 
-and all controller actions will have the current controller instance through `this`
-
-_/dist.env_
-Default environment constants.
-Must copy from dist.env to .env in order to work.
+`up` - SQL query for changing database
+`down` - SQL query for undoing changes made to database
  
-_/.env_
-Environment file for describing environment specific constants.
-It could contain different values on production/development/local server.
+The `down` method is useful when after a broken deployment happen and you need to reverse the codebase and therefore the database to previous version.
 
-_/.env.test
-Environment file for describing test environment specific constants.
-It could contain different values on production/development/local server.
+***Keeping track of the migrations***
 
-_/var/migration.json_
-Tracks migration activity.
+Registering a migration is done in `/src/server/migrations.json` after the latest executed migration or at the bottom of the file.
+If you place it for example before the `latest` your new migration will be not executed automatically therefore you will need to run it manually.
 
-Properties
+Latest executed migration and history about all migration executions are kept in `/var/migration.json`
 
-*  latest
-The last migration done when using the automatic, up or down methods alone.
-When using the command with second argument (file path), the prop is not updated.
+***Migration script***
 
-*  history
-Tracks all the migration history. It has props: action, query, migration_path, error, time
+Migrations are run through CLI.
+
+ *  Automatically run all migrations `up` actions after the `latest` one.
+```node bin/migration.js```
+
+ *  Run `up` action of the next migration and set it as `latest`.
+```node bin/migration.js up```
+
+ *  Run exact migration and save it only in migration history, it will be not set as `latest`.
+```node bin/migration.js up "/path/to/migration"```
+
+ *  Run previous executed migration and sets the next previous as `latest`.
+```node bin/migration.js down```
+
+ *  Run exact migration and save it only in migration history, it will be not set as `latest`.
+```node bin/migration.js down "/path/to/migration"```
+
+**Webpack**
+---
+The framework comes with fully configured webpack for compiling the front-end.
+
+Supports
+
+* babel for supporting latest js & react
+* stylus with nib support
+* jsx
+* minifications
+* css class prefixes
+* different environments
+
+The configurations can be found in `webpack.config.js` & `.babelrc`
+ 
+***React***
+As a front-end framework is used react and the source files can be found in `/src/client/`.
+They are two folders which represents the client environments `desktop` and `mobile`.
+Currently the back-end does not detect different client environments other than `desktop`.
+
+***Compiling***
+CSS and JS files are compiled in `/public/assets/dist/`.
+The file names are generated from the (client environment folder name) + (version hash).
+If compiling is started in production environment a `minification` & `optimization` of the assets are done.
+
+***Command***
+webpack can be start from the command
+```
+$ npm run webpack
+```
 
 ---
 
