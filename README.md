@@ -344,6 +344,7 @@ When adding validation you are passing two arguments.
   Possible values are: `body`, `query`, `params`
 
 ***Multiple validation***
+
 Different type (`body`, `query`, `params`) validations can be set for a route.
 
 ```
@@ -518,16 +519,19 @@ Supports
 The configurations can be found in `webpack.config.js` & `.babelrc`
  
 ***React***
+
 As a front-end framework is used react and the source files can be found in `/src/client/`.
 They are two folders which represents the client environments `desktop` and `mobile`.
 Currently the back-end does not detect different client environments other than `desktop`.
 
 ***Compiling***
+
 CSS and JS files are compiled in `/public/assets/dist/`.
 The file names are generated from the (client environment folder name) + (version hash).
 If compiling is started in production environment a `minification` & `optimization` of the assets are done.
 
 ***Command***
+
 webpack can be start from the command
 ```
 $ npm run webpack
