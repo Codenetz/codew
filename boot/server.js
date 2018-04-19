@@ -4,7 +4,9 @@ let
   express = require("express"),
   morgan = require("morgan"),
   helmet = require("helmet"),
+  uniqid = require("uniqid"),
   bodyParser = require('body-parser'),
+  path = require("path"),
   env = require("./env"),
   modules = require("./modules"),
   containers = require("./containers"),
@@ -32,7 +34,18 @@ if (env.isDevelopment) {
   app.use(morgan("combined"));
 }
 
-app.set("multer", multer({ dest: 'public/uploads/' }));
+app.set("multer", multer({ storage: multer.diskStorage({
+
+    destination: function (req, file, cb) {
+      cb(null, "public/uploads/");
+    },
+
+    filename: function (req, file, cb) {
+      cb(null, uniqid() +  path.extname(file.originalname));
+    }
+  })
+  })
+);
 
 app.set('views', './src/client/views');
 app.set('view engine', 'ejs');

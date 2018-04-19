@@ -6,7 +6,7 @@ let
 
 module.exports = (schema, type, req, res, next) => {
 
-  if(["body", "query", "params"].indexOf(type) < 0) {
+  if(["body", "query", "params", "files"].indexOf(type) < 0) {
     return next("Request type is not correct");
   }
 
