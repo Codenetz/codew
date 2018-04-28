@@ -11,7 +11,7 @@ let
   modules = require("./modules"),
   containers = require("./containers"),
   drivers = require("./drivers"),
-  multer  = require('multer'),
+  multer = require('multer'),
   errorMiddleware = require("./../src/server/middlewares/error"),
   clientMiddleware = require("./../src/server/middlewares/client"),
   version = require("./../src/server/lib/version"),
@@ -24,7 +24,7 @@ app.set("VERSION", new version());
 app.use(helmet());
 
 /** parse application/x-www-form-urlencoded */
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 
 /** parse application/json */
 app.use(bodyParser.json());
@@ -34,16 +34,21 @@ if (env.isDevelopment) {
   app.use(morgan("combined"));
 }
 
-app.set("multer", multer({ storage: multer.diskStorage({
+app.set("multer", multer({
 
-    destination: function (req, file, cb) {
-      cb(null, "public/uploads/");
-    },
+    storage: multer.diskStorage({
+      destination: function (req, file, cb) {
+        cb(null, "public/uploads/");
+      },
 
-    filename: function (req, file, cb) {
-      cb(null, uniqid() +  path.extname(file.originalname));
+      filename: function (req, file, cb) {
+        cb(null, uniqid() + path.extname(file.originalname));
+      }
+    }),
+
+    limits: {
+      fileSize: 15000000 //15MB
     }
-  })
   })
 );
 
