@@ -1,6 +1,7 @@
 let
   Joi = require('joi'),
-  validation = require("./../../../middlewares/validation");
+  validation = require("./../../../middlewares/validation"),
+  imageCompression = require("./../../../middlewares/imageCompression");
 
 module.exports = (app) => {
 
@@ -22,6 +23,8 @@ module.exports = (app) => {
 
     /** Handles file upload */
     fileUpload,
+
+    imageCompression.bind(null, "image"),
 
     /** Checks uploaded files */
     validation.bind(
