@@ -1,8 +1,8 @@
 (async () => {
   let
-    logger = require("../src/utils/logger"),
+    logger = require("../src/server/utils/logger"),
     versionClass = require("../src/server/lib/version"),
-    version = new versionClass();
+    version = new versionClass(),
     args = process.argv.slice(2),
     action = "show",
     actions = ["show", "major", "minor", "patch"];
