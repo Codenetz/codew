@@ -1,18 +1,15 @@
 let
   fs = require("fs"),
-  crypto = require('crypto'),
-  shasum = crypto.createHash('sha1'),
-  path = require("path");
+  crypto = require("crypto");
 
-class version {
+  class version {
 
   get hash() {
-    this._hash = this._hash ? this._hash : shasum.update(this.current).digest('hex');
-    return this._hash;
+    return crypto.createHash("sha1").update(this.current).digest("hex");
   }
 
   get current() {
-    return fs.readFileSync(this.path, 'UTF-8');
+    return fs.readFileSync(this.path, "UTF-8");
   }
 
   get path() {
