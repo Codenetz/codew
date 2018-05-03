@@ -1,12 +1,16 @@
 let
-  Joi = require('joi'),
-  Boom = require('boom'),
-  env = require('../../../boot/env'),
-  logger = require('../../server/utils/logger');
+  Joi = require("joi"),
+  Boom = require("boom"),
+  env = require("../../../boot/env"),
+  logger = require("../../server/utils/logger");
 
-module.exports = (schema, req, res, next) => {
+module.exports = (schema, type, req, res, next) => {
 
-  let {error} = Joi.validate(req.body, schema);
+  if(["body", "query", "params", "files"].indexOf(type) < 0) {
+    return next("Request type is not correct");
+  }
+
+  let {error} = Joi.validate(req[type], schema);
 
   if(!error) {
     return next();

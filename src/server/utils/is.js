@@ -6,3 +6,4 @@ module.exports.strictObject = (v) => {return !!(v && typeof v === "object" && v.
 module.exports.object = (v) => {return v instanceof Object};
 module.exports.null = (v) => {return (v === null);};
 module.exports.stringEmpty = (v) => {return typeof v === "string" && v.trim().length <= 0};
+module.exports.array = (v) => {return v.constructor === Array};
