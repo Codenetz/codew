@@ -20,7 +20,7 @@ module.exports.FETCH_USER = async (req, res, next) => {
     return next(Boom.forbidden());
   }
 
-  req.user = await req.app.get("MODEL").get("userModel").getUserById(req.user.id);
+  req.user = await req.app.get("MODEL").get("userModel").getItemById(req.user.id);
   next();
 };
 

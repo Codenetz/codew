@@ -11,20 +11,6 @@ class userModel extends model {
     this.app = app;
   }
 
-  async getUserById(id) {
-    let
-      connection = await this.getConnection(),
-      [rows] = await connection
-        .execute("SELECT * FROM " + USER_TABLE + " WHERE id = ?;", [id])
-        .catch((error) => {
-          connection.release();
-          throw error;
-        });
-
-    connection.release();
-    return rows.length > 0 ? rows[0] : null;
-  }
-
   async getUserByUsernameAndPassword(username, password) {
     let
       connection = await this.getConnection(),
@@ -92,7 +78,7 @@ class userModel extends model {
     connection.release();
 
     if(result.insertId) {
-      return this.getUserById(result.insertId);
+      return this.getItemById(result.insertId);
     }
 
     return null;
