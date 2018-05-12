@@ -47,6 +47,7 @@ class model {
     return await this.app.get("MYSQL_POOL").getConnection();
   }
 
+  /** Soft deletes an item */
   async deleteItemById(id) {
     let connection = await this.getConnection();
     await connection
@@ -59,24 +60,46 @@ class model {
     return true;
   }
 
+  /** Gets a single item by an id */
   async getItemById(id) {
-    let
-      connection = await this.getConnection(),
-      [rows] = await connection
-        .execute("SELECT * FROM " + this.table + " WHERE id = ?", [id])
-        .catch((error) => {
-          connection.release();
-          throw error;
-        });
-    connection.release();
+    let rows = await this.getItemsBy({id: id});
     return rows.length > 0 ? rows[0] : null;
   }
 
+  /** Gets items with limit and offset */
   async getItems(limit, offset) {
+    return await this.getItemsBy(undefined, limit, offset);
+  }
+
+  /** Gets items with where clause, limit and offset */
+  async getItemsBy(andWhere, limit, offset) {
 
     let
       sql = "SELECT * FROM " + this.table + " ",
       bindedParams = [];
+
+    /** Handles the where clause */
+    if(typeof andWhere !== "undefined") {
+
+      let
+        fields = Object.keys(andWhere),
+        valuesByKeys = andWhere;
+
+      /** Creates the SQL query if fields are found */
+      if(fields.length > 0) {
+        let andWhereArray = [];
+        fields.map((field) => {
+          andWhereArray.push(field + " = ? ");
+          bindedParams.push(valuesByKeys[field]);
+        });
+
+        if(andWhereArray.length > 0) {
+
+          /** Concat where clause */
+          sql += "WHERE " + andWhereArray.join(" AND ");
+        }
+      }
+    }
 
     if(typeof limit !== "undefined") {
       sql += "LIMIT ? ";
@@ -97,7 +120,7 @@ class model {
           throw error;
         });
     connection.release();
-    return rows.length > 0 ? rows[0] : null;
+    return rows;
   }
 }
 
