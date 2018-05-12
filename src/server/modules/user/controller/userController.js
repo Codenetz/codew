@@ -76,6 +76,17 @@ class userController extends controller {
     });
   }
 
+  async testAction(req, res, next) {
+
+    let
+      userModel = this.app.get("MODEL").get("userModel"),
+      user = await userModel.parseUser(req.user);
+
+    return this.response(res, {
+      "user": user
+    });
+  }
+
 }
 
 module.exports = userController;

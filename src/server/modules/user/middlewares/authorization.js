@@ -4,8 +4,10 @@ let
   {ROLE_ADMIN} = require("../constants/roles"),
   env = require("../../../../../boot/env");
 
-/** Checks if JWT is valid */
-module.exports.HAS_TOKEN = jwt({
+/** Handles passed JWT.
+ *  If the token is valid, req.user will be set in the request object.
+ */
+module.exports.AUTHORIZATION_TOKEN = jwt({
   secret: env.vars.SECRET_KEY
 });
 

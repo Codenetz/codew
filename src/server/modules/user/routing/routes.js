@@ -1,6 +1,7 @@
 let
   Joi = require("joi"),
-  validation = require("./../../../middlewares/validation");
+  validation = require("./../../../middlewares/validation"),
+  {AUTHORIZATION_TOKEN, FETCH_USER, IS_ADMIN} = require("./../middlewares/authorization");
 
 module.exports = (app) => { 
   let userController = new(require("../controller/userController"))(app);
@@ -27,4 +28,10 @@ module.exports = (app) => {
       "body"
     ),
     userController.authenticateAction);
+
+  app.get("/api/v1/test-admin",
+    AUTHORIZATION_TOKEN,
+    FETCH_USER,
+    IS_ADMIN,
+    userController.testAction);
 };
