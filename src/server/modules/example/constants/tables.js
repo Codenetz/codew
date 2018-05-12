@@ -1,1 +1,0 @@
-module.exports.USER_TABLE = "rnb_user";

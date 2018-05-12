@@ -47,14 +47,57 @@ class model {
     return await this.app.get("MYSQL_POOL").getConnection();
   }
 
-  /** Get all records from table */
-  async findAll() {
+  async deleteItemById(id) {
+    let connection = await this.getConnection();
+    await connection
+      .execute("UPDATE " + this.table + " SET deleted = 1 WHERE id = ?", [id])
+      .catch((error) => {
+        connection.release();
+        throw error;
+      });
+    connection.release();
+    return true;
+  }
+
+  async getItemById(id) {
     let
       connection = await this.getConnection(),
-      result = await connection.query("SELECT * FROM " + this.table).catch(logger.error);
+      [rows] = await connection
+        .execute("SELECT * FROM " + this.table + " WHERE id = ?", [id])
+        .catch((error) => {
+          connection.release();
+          throw error;
+        });
     connection.release();
+    return rows.length > 0 ? rows[0] : null;
+  }
 
-    return result;
+  async getItems(limit, offset) {
+
+    let
+      sql = "SELECT * FROM " + this.table + " ",
+      bindedParams = [];
+
+    if(typeof limit !== "undefined") {
+      sql += "LIMIT ? ";
+      bindedParams.push(parseInt(limit) || 0);
+    }
+
+    if(typeof offset !== "undefined") {
+      sql += "OFFSET ? ";
+      bindedParams.push(parseInt(offset) || 0);
+    }
+
+    let
+      connection = await this.getConnection(),
+      [rows] = await connection
+        .execute(sql, bindedParams)
+        .catch((error) => {
+          connection.release();
+          throw error;
+        });
+    connection.release();
+    return rows.length > 0 ? rows[0] : null;
   }
 }
 
