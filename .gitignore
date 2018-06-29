@@ -6,5 +6,6 @@ npm-debug.log
 .env.test
 .version
 /var/migration.json
+/var/migration_test.json
 /public/assets/dist/
 /public/uploads/

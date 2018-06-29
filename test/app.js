@@ -5,4 +5,5 @@ require('./lib/is');
 require('./lib/controllerTest');
 
 let app = require('./../boot/server').app;
-require('./modules/example/routes/list')(app);
+require('./modules/user/actions/authentication')(app);
+require('./modules/user/actions/signup')(app);
