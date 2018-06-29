@@ -5,14 +5,14 @@ let
 module.exports = (app) => {
 
   let
-    username = "auth-test-" + String(Math.floor(Date.now() / 1000)),
+    username = "signup-test-" + String(Math.floor(Date.now() / 1000)),
     password = "test",
     email = username + "@";
 
-  describe('POST /api/v1/authenticate', function() {
+  describe('POST /api/v1/sign-up', function() {
     it('required username', function(done) {
       request(app)
-        .post('/api/v1/authenticate')
+        .post('/api/v1/sign-up')
         .expect('Content-Type', /json/)
         .expect('Content-Length', '155')
         .expect(400)
@@ -26,7 +26,7 @@ module.exports = (app) => {
 
     it('required password', function(done) {
       request(app)
-        .post('/api/v1/authenticate')
+        .post('/api/v1/sign-up')
         .send({
           username: "test"
         })
@@ -60,68 +60,56 @@ module.exports = (app) => {
         .end(done);
     });
 
-    it('wrong credentials - password', function(done) {
+    it('username exists', function(done) {
       request(app)
-        .post('/api/v1/authenticate')
+        .post('/api/v1/sign-up')
         .send({
           username: username,
-          password: "wrong"
+          password: password,
+          email: "another-" + email
         })
         .expect('Content-Type', /json/)
-        .expect(401)
+        .expect(409)
         .expect((res) => {
           let {body} = res;
-          assert.equal(body.error, "Unauthorized");
+          assert.exists(body.message);
+          assert.equal(body.message, "user.exists");
         })
         .end(done);
     });
 
-    it('wrong credentials - username', function(done) {
+    it('email exists', function(done) {
       request(app)
-        .post('/api/v1/authenticate')
+        .post('/api/v1/sign-up')
         .send({
-          username: username + "-wrong",
-          password: "test"
+          username: "another-" + username,
+          password: password,
+          email: email
         })
         .expect('Content-Type', /json/)
-        .expect(401)
+        .expect(409)
         .expect((res) => {
           let {body} = res;
-          assert.equal(body.error, "Unauthorized");
+          assert.exists(body.message);
+          assert.equal(body.message, "user.exists");
         })
         .end(done);
     });
 
-    it('wrong credentials - username, password', function(done) {
+    it('username & email exists', function(done) {
       request(app)
-        .post('/api/v1/authenticate')
-        .send({
-          username: username + "-wrong",
-          password: "wrong"
-        })
-        .expect('Content-Type', /json/)
-        .expect(401)
-        .expect((res) => {
-          let {body} = res;
-          assert.equal(body.error, "Unauthorized");
-        })
-        .end(done);
-    });
-
-    it('authenticate successfully', function(done) {
-      request(app)
-        .post('/api/v1/authenticate')
+        .post('/api/v1/sign-up')
         .send({
           username: username,
-          password: password
+          password: password,
+          email: email
         })
         .expect('Content-Type', /json/)
-        .expect(200)
+        .expect(409)
         .expect((res) => {
           let {body} = res;
-          assert.exists(body.data.user);
-          assert.exists(body.data.jwt);
-          assert.equal(body.data.user.username, username);
+          assert.exists(body.message);
+          assert.equal(body.message, "user.exists");
         })
         .end(done);
     });
