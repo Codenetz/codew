@@ -5,17 +5,24 @@ let
   logger = require("../../server/utils/logger"),
   mySQL = require("../drivers/mySQL");
 
-const MIGRATION_VAR_FILE_PATH = __dirname + "/../../../var/migration.json";
-const MIGRATION_CONFIG_FILE_PATH = __dirname + "/../migrations.json";
+const MIGRATION_VAR_DIR_PATH = __dirname + "/../../../var/";
+const MIGRATIONS = __dirname + "/../migrations.json";
 const DEFAULT_VALUE_VAR_FILE = {"latest":null,"history":[]};
 const APP_MOCK = new appMock();
 
 class migration {
 
-  constructor() {
-    this.tryToCreateVarMigration();
+  constructor(migration_config_var_filename) {
+    this.migration_config_var_file_name = migration_config_var_filename;
     this.last_query = "";
+
+    this.createMigrationConfig();
     mySQL(APP_MOCK);
+    logger.info("DATABASE: " + APP_MOCK.settings.ENV.vars.MYSQL_DEFAULT_DATABASE);
+  }
+
+  getMigrationConfigVarPath() {
+    return MIGRATION_VAR_DIR_PATH + this.migration_config_var_file_name;
   }
 
   get lastQuery() {
@@ -27,6 +34,13 @@ class migration {
     return await APP_MOCK.get("MYSQL_POOL").getConnection();
   }
 
+  async executeAutomaticUp () {
+    while (await this.executeNextUp()){
+      // empty
+    }
+    return true;
+  }
+
   write(path, json) {
     fs.writeFileSync(path, JSON.stringify(json), "utf8");
   }
@@ -35,29 +49,25 @@ class migration {
     return JSON.parse(fs.readFileSync(path, "utf8"));
   }
 
+  getMigrations() {
+    return this.read(MIGRATIONS);
+  }
+
   readConfig() {
-    return this.read(MIGRATION_CONFIG_FILE_PATH);
+    return this.read(this.getMigrationConfigVarPath());
   }
 
   writeConfig(json) {
-    return this.write(MIGRATION_CONFIG_FILE_PATH, json);
-  }
-
-  readVar() {
-    return this.read(MIGRATION_VAR_FILE_PATH);
-  }
-
-  writeVar(json) {
-    return this.write(MIGRATION_VAR_FILE_PATH, json);
+    return this.write(this.getMigrationConfigVarPath(), json);
   }
 
   requireMigration(migration_path) {
-    return require(path.dirname(MIGRATION_CONFIG_FILE_PATH) + migration_path);
+    return require(path.dirname(MIGRATIONS) + migration_path);
   }
 
-  tryToCreateVarMigration() {
+  createMigrationConfig() {
     try {
-      fs.writeFileSync(MIGRATION_VAR_FILE_PATH, JSON.stringify(DEFAULT_VALUE_VAR_FILE), {flag: "wx"});
+      fs.writeFileSync(this.getMigrationConfigVarPath(), JSON.stringify(DEFAULT_VALUE_VAR_FILE), {flag: "wx"});
     }
     catch(err) {
       // empty
@@ -66,9 +76,16 @@ class migration {
 
   /** Sets the latest executed migration path */
   setLatestMigration(migration_path) {
-    let migration_var = this.readVar();
+    let migration_var = this.readConfig();
     migration_var.latest = migration_path;
-    this.writeVar(migration_var);
+    this.writeConfig(migration_var);
+  }
+
+  /** Sets the history */
+  setHistoryMigration(history) {
+    let migration_var = this.readConfig();
+    migration_var.history.push(history);
+    this.writeConfig(migration_var);
   }
 
   createHistoryObject(action, query, migration_path, error) {
@@ -81,25 +98,11 @@ class migration {
     };
   }
 
-  /** Sets the history */
-  setHistoryMigration(history) {
-    let migration_var = this.readVar();
-    migration_var.history.push(history);
-    this.writeVar(migration_var);
-  }
-
-  async executeAutomaticUp () {
-    while (await this.executeNextUp()){
-      // empty
-    }
-    return true;
-  }
-
   async executeNextUp() {
     let
-      migrations_path = this.readConfig(),
-      migration_var = this.readVar(),
-      latest_migration = migration_var.latest,
+      migrations_path = this.getMigrations(),
+      migration_config = this.readConfig(),
+      latest_migration = migration_config.latest,
       migration_latest_path_index = migrations_path.indexOf(latest_migration);
 
     if(migrations_path.length === 0) {
@@ -130,9 +133,9 @@ class migration {
 
   async executeNextDown() {
     let
-      migrations_path = this.readConfig(),
-      migration_var = this.readVar(),
-      latest_migration = migration_var.latest,
+      migrations_path = this.getMigrations(),
+      migration_config = this.readConfig(),
+      latest_migration = migration_config.latest,
       migration_latest_path_index = migrations_path.indexOf(latest_migration);
 
     if(migrations_path.length === 0) {

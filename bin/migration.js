@@ -1,12 +1,32 @@
 (async () => {
 
+  let
+    path = require("path"),
+    args = process.argv.slice(2),
+    testing = false;
+
+  /** Handles the test flag */
+  if(args.length > 0) {
+    let test_flag_index = args.indexOf("--test");
+
+
+    if(test_flag_index >= 0) {
+      testing = true;
+      args.splice(test_flag_index, 1);
+    }
+  }
+
+  const
+    MIGRATION_TEST = testing,
+    MIGRATION_CONFIG_VAR_FILENAME = "migration.json",
+    MIGRATION_CONFIG_TEST_VAR_FILENAME = "migration_test.json";
+
   /** Load module for .env support */
-  require("dotenv").config();
+  require("dotenv").config(MIGRATION_TEST ? {path: path.resolve(process.cwd(), '.env.test')} : {});
 
   let
     logger = require("../src/server/utils/logger"),
     migrationClass = require("../src/server/lib/migration"),
-    args = process.argv.slice(2),
     action = "automatic-up",
     migration_path = null,
     actions = ["up", "down", "automatic-up"];
@@ -48,7 +68,7 @@
     }
   };
 
-  let migration = new migrationClass();
+  let migration = new migrationClass(MIGRATION_TEST ? MIGRATION_CONFIG_TEST_VAR_FILENAME : MIGRATION_CONFIG_VAR_FILENAME);
 
   /** Automatic */
   if(action === "automatic-up") {

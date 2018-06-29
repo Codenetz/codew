@@ -1,5 +1,5 @@
 {
-  "EXAMPLE": {
-    "path": "/modules/example/example"
+  "USER": {
+    "path": "/modules/user/user"
   }
 }

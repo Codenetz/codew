@@ -489,19 +489,26 @@ Latest executed migration and history about all migration executions are kept in
 Migrations are run through CLI.
 
  *  Automatically run all migrations `up` actions after the `latest` one.
-```node bin/migration.js```
+```$ node bin/migration.js```
 
  *  Run `up` action of the next migration and set it as `latest`.
-```node bin/migration.js up```
+```$ node bin/migration.js up```
 
  *  Run exact migration and save it only in migration history, it will be not set as `latest`.
-```node bin/migration.js up "/path/to/migration"```
+```$ node bin/migration.js up "/path/to/migration"```
 
  *  Run previous executed migration and sets the next previous as `latest`.
-```node bin/migration.js down```
+```$ node bin/migration.js down```
 
  *  Run exact migration and save it only in migration history, it will be not set as `latest`.
-```node bin/migration.js down "/path/to/migration"```
+```$ node bin/migration.js down "/path/to/migration"```
+
+***Migration script on test environment***
+
+Tests are run on a test database so in order to keep it up to date you must tell the migration script which database to update.
+This is done by passing `test` as a flag.
+
+```$ node bin/migration.js --test```
 
 **Webpack**
 ---
