@@ -10,6 +10,7 @@ let
   env = require("./env"),
   modules = require("./modules"),
   language = require("./language"),
+  translations = require("./translations"),
   containers = require("./containers"),
   drivers = require("./drivers"),
   multer = require('multer'),
@@ -72,6 +73,9 @@ if (env.isDevelopment) {
 
 /** Loads available languages */
 language(app);
+
+/** Loads translations */
+translations(app);
 
 /** Loads modules */
 modules(app);

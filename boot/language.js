@@ -22,17 +22,17 @@ module.exports = (app) => {
       domain: "es-es",
       is_default: false
     },
-    {
-      name: "Russian",
-      code: "ru-RU",
-      domain: "ru-ru",
-      is_default: false
-    },
-    {
-      name: "German",
-      code: "de-DE",
-      domain: "de-de",
-      is_default: false
-    }
+    // {
+    //   name: "Russian",
+    //   code: "ru-RU",
+    //   domain: "ru-ru",
+    //   is_default: false
+    // },
+    // {
+    //   name: "German",
+    //   code: "de-DE",
+    //   domain: "de-de",
+    //   is_default: false
+    // }
   ]);
 };
