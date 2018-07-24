@@ -14,6 +14,7 @@ let
   multer = require('multer'),
   errorMiddleware = require("./../src/server/middlewares/error"),
   clientMiddleware = require("./../src/server/middlewares/client"),
+  clientDevice = require("./../src/server/middlewares/clientDevice"),
   version = require("./../src/server/lib/version"),
   app = express();
 
@@ -71,8 +72,6 @@ if (env.isDevelopment) {
 
 /** Loads modules */
 modules(app);
-
-app.get("*", clientMiddleware);
 
 /** Loads error middleware */
 app.use("/", errorMiddleware);
