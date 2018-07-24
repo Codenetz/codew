@@ -9,7 +9,7 @@ class homeController extends controller {
 
   async homeAction(req, res, next) {
     return res.render('index', {
-      assetFileName: "app" + (req.client_device && req.client_device.is_mobile === true ? "mobile" : "") + req.app.get("VERSION").hash,
+      assetFileName: "app" + (req.clientDevice && req.clientDevice.is_mobile === true ? "mobile" : "") + req.app.get("VERSION").hash,
       version_hash: req.app.get("VERSION").hash
     });
   }
