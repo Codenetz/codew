@@ -9,11 +9,11 @@ let
   path = require("path"),
   env = require("./env"),
   modules = require("./modules"),
+  language = require("./language"),
   containers = require("./containers"),
   drivers = require("./drivers"),
   multer = require('multer'),
   errorMiddleware = require("./../src/server/middlewares/error"),
-  clientMiddleware = require("./../src/server/middlewares/client"),
   clientDevice = require("./../src/server/middlewares/clientDevice"),
   version = require("./../src/server/lib/version"),
   app = express();
@@ -69,6 +69,9 @@ drivers(app);
 if (env.isDevelopment) {
   app.use(express.static('public'));
 }
+
+/** Loads available languages */
+language(app);
 
 /** Loads modules */
 modules(app);
