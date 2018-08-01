@@ -16,6 +16,7 @@ Full-stack JavaScript framework build on top of [Express](https://expressjs.com/
 * [Webpack](#webpack)
 * [Device detection](#device-detection)
 * [Language](#language)
+* [Translation](#translation)
 
 **Prerequisites**
 ---
@@ -552,10 +553,10 @@ Detecting client device is done by using the `clientDevice` middleware on any ro
 For example:
 
 ```
-  app.get("/",
-    clientDevice,
-    homeController.homeAction
-  );
+app.get("/",
+  clientDevice,
+  homeController.homeAction
+);
 ```
 
 to the request will be passed:
@@ -563,11 +564,62 @@ to the request will be passed:
 * device. Response from [mobile-detect](https://www.npmjs.com/package/mobile-detect)
 * is_mobile. Boolean that tells if client device is mobile. 
 
-Notice that tablets are considered mobile too. 
-This rule could be changed from `/src/server/middlewares/clientDevice.js`
+___Notice that tablets are considered mobile too.___
+___This rule could be changed from `/src/server/middlewares/clientDevice.js`___
 
 **Language**
 ---
+Language support is available on every route by using the `language` middleware.
+By using the middleware a property `language` is set in the request.
+Before setting up the middleware you must know that by default language support is not enabled.
+
+***Enable***
+
+* Set `ENABLE_MULTILANGUAGE` to `true` in `.env` file.
+
+* Setting up the available languages is done in `/boot/language.js`.
+They could be dynamic too, for example if they are fetched from API.
+
+* Set the `language` middleware on any route where multilanguage support is need it.
+
+For example:
+
+```
+app.get("/",
+  language,
+  homeController.homeAction
+);
+```
+
+***Default language***
+
+You can set a default language by changing the `is_default` property to `true` for your specific language in `/boot/language.js`. 
+
+___Note: Only one language can be set as default.___
+
+When requesting the default language subdomain you will be redirected to the root domain.
+Example: `en.example` (301 Moved Permanently) -> `example`
+
+***Changing language***
+
+You can change the language by passing the query parameter `lang` in the URL.
+The value passed must be a language code (`code` property) from the available language codes in `/boot/language.js`.
+Example: `example?lang=en_GB`
+
+The language for new clients is determined by:
+- accessing the root domain (`example`): The language is based on the ip geolocation of the client.
+- accessing a subdomain (`es.example`): The language is based on the subdomain and will be used from here onwards.
+
+**Translation**
+---
+Language functionality must be enabled in order to use the translations.
+
+By using the language middleware a property `translation` is set in the request.
+The value of the `translation` property is an object holding all translations from current language.
+
+***Translation file***
+Translation files are key-value json objects located in `/translations` directory.
+To have a correct match between client language and translation file the file names must be same as the language codes in `/boot/language.js`.
 
 ---
 
