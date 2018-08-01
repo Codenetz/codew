@@ -5,15 +5,18 @@ let
   morgan = require("morgan"),
   helmet = require("helmet"),
   uniqid = require("uniqid"),
+  cookieParser = require('cookie-parser'),
   bodyParser = require('body-parser'),
   path = require("path"),
   env = require("./env"),
   modules = require("./modules"),
+  language = require("./language"),
+  translations = require("./translations"),
   containers = require("./containers"),
   drivers = require("./drivers"),
   multer = require('multer'),
   errorMiddleware = require("./../src/server/middlewares/error"),
-  clientMiddleware = require("./../src/server/middlewares/client"),
+  clientDevice = require("./../src/server/middlewares/clientDevice"),
   version = require("./../src/server/lib/version"),
   app = express();
 
@@ -28,6 +31,9 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 /** parse application/json */
 app.use(bodyParser.json());
+
+/** parse cookies */
+app.use(cookieParser());
 
 /** Loads logger on development mode */
 if (env.isDevelopment) {
@@ -69,10 +75,18 @@ if (env.isDevelopment) {
   app.use(express.static('public'));
 }
 
+if(env.vars.ENABLE_MULTILANGUAGE === "true") {
+
+  /** Loads available languages */
+  language(app);
+
+
+  /** Loads translations */
+  translations(app);
+}
+
 /** Loads modules */
 modules(app);
-
-app.get("*", clientMiddleware);
 
 /** Loads error middleware */
 app.use("/", errorMiddleware);

@@ -1,5 +1,9 @@
 {
   "USER": {
     "path": "/modules/user/user"
+  },
+
+  "HOME": {
+    "path": "/modules/home/home"
   }
 }
