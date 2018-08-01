@@ -16,6 +16,7 @@ Full-stack JavaScript framework build on top of [Express](https://expressjs.com/
 * [Webpack](#webpack)
 * [Device detection](#device-detection)
 * [Language](#language)
+* [Translation](#translation)
 
 **Prerequisites**
 ---
@@ -569,6 +570,7 @@ ___This rule could be changed from `/src/server/middlewares/clientDevice.js`___
 **Language**
 ---
 Language support is available on every route by using the `language` middleware.
+By using the middleware a property `language` is set in the request.
 Before setting up the middleware you must know that by default language support is not enabled.
 
 ***Enable***
@@ -607,6 +609,17 @@ Example: `example?lang=en_GB`
 The language for new clients is determined by:
 - accessing the root domain (`example`): The language is based on the ip geolocation of the client.
 - accessing a subdomain (`es.example`): The language is based on the subdomain and will be used from here onwards.
+
+**Translation**
+---
+Language functionality must be enabled in order to use the translations.
+
+By using the language middleware a property `translation` is set in the request.
+The value of the `translation` property is an object holding all translations from current language.
+
+***Translation file***
+Translation files are key-value json objects located in `/translations` directory.
+To have a correct match between client language and translation file the file names must be same as the language codes in `/boot/language.js`.
 
 ---
 
