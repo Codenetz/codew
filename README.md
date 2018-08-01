@@ -611,6 +611,7 @@ The language for new clients is determined by:
 - accessing a subdomain (`es.example`): The language is based on the subdomain and will be used from here onwards.
 
 ***Geolocation & Nginx***
+
 If nginx is set in front of the node server then `proxy_set_header X-Forwarded-For` must be set.
 
 **Translation**
