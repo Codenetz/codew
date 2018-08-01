@@ -3,36 +3,29 @@ module.exports = (app) => {
   /** Gets available languages.
    *  They could be fetched from a file, api, written here, etc ...
    */
-  app.set("languages", [
+  const languages = [
     {
-      name: "Bulgarian",
-      code: "bg_BG",
-      domain: "bg-bg",
+      name: "English",
+      code: "en_GB",
+      domain: "en",
+      country_codes: ["US", "GB"],
       is_default: true
     },
     {
-      name: "English",
-      code: "en-GB",
-      domain: "en-gb",
+      name: "Bulgarian",
+      code: "bg_BG",
+      domain: "bg",
+      country_codes: ["BG"],
       is_default: false
     },
     {
       name: "Spanish",
-      code: "es-ES",
-      domain: "es-es",
+      code: "es_ES",
+      domain: "es",
+      country_codes: ["ES", "MX", "AR"],
       is_default: false
-    },
-    // {
-    //   name: "Russian",
-    //   code: "ru-RU",
-    //   domain: "ru-ru",
-    //   is_default: false
-    // },
-    // {
-    //   name: "German",
-    //   code: "de-DE",
-    //   domain: "de-de",
-    //   is_default: false
-    // }
-  ]);
+    }
+  ];
+
+  app.set("languages", languages);
 };
