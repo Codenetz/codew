@@ -14,6 +14,7 @@ Full-stack JavaScript framework build on top of [Express](https://expressjs.com/
 * [File upload](#file-upload)
 * [Migrations](#migrations)
 * [Webpack](#webpack)
+* []
 
 **Prerequisites**
 ---
@@ -529,7 +530,6 @@ The configurations can be found in `webpack.config.js` & `.babelrc`
 
 As a front-end framework is used react and the source files can be found in `/src/client/`.
 They are two folders which represents the client environments `desktop` and `mobile`.
-Currently the back-end does not detect different client environments other than `desktop`.
 
 ***Compiling***
 

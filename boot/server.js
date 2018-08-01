@@ -5,6 +5,7 @@ let
   morgan = require("morgan"),
   helmet = require("helmet"),
   uniqid = require("uniqid"),
+  cookieParser = require('cookie-parser'),
   bodyParser = require('body-parser'),
   path = require("path"),
   env = require("./env"),
@@ -30,6 +31,9 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 /** parse application/json */
 app.use(bodyParser.json());
+
+/** parse cookies */
+app.use(cookieParser());
 
 /** Loads logger on development mode */
 if (env.isDevelopment) {
@@ -71,11 +75,15 @@ if (env.isDevelopment) {
   app.use(express.static('public'));
 }
 
-/** Loads available languages */
-language(app);
+if(env.vars.ENABLE_MULTILANGUAGE === "true") {
 
-/** Loads translations */
-translations(app);
+  /** Loads available languages */
+  language(app);
+
+
+  /** Loads translations */
+  translations(app);
+}
 
 /** Loads modules */
 modules(app);
