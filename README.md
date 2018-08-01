@@ -14,7 +14,8 @@ Full-stack JavaScript framework build on top of [Express](https://expressjs.com/
 * [File upload](#file-upload)
 * [Migrations](#migrations)
 * [Webpack](#webpack)
-* []
+* [Device detection](#device-detection)
+* [Language](#language)
 
 **Prerequisites**
 ---
@@ -543,6 +544,30 @@ webpack can be start from the command
 ```
 $ npm run webpack
 ```
+
+**Device detection**
+---
+Detecting client device is done by using the `clientDevice` middleware on any route you want.
+
+For example:
+
+```
+  app.get("/",
+    clientDevice,
+    homeController.homeAction
+  );
+```
+
+to the request will be passed:
+
+* device. Response from [mobile-detect](https://www.npmjs.com/package/mobile-detect)
+* is_mobile. Boolean that tells if client device is mobile. 
+
+Notice that tablets are considered mobile too. 
+This rule could be changed from `/src/server/middlewares/clientDevice.js`
+
+**Language**
+---
 
 ---
 
