@@ -1,13 +1,10 @@
-let
-  request = require('supertest'),
-  assert = require("chai").assert;
+let request = require('supertest'),
+  assert = require('chai').assert;
 
-module.exports = (app) => {
-
-  let
-    username = "auth-test-" + String(Math.floor(Date.now() / 1000)),
-    password = "test",
-    email = username + "@";
+module.exports = app => {
+  let username = 'auth-test-' + String(Math.floor(Date.now() / 1000)),
+    password = 'test',
+    email = username + '@';
 
   describe('POST /api/v1/authenticate', function() {
     it('required username', function(done) {
@@ -16,10 +13,18 @@ module.exports = (app) => {
         .expect('Content-Type', /json/)
         .expect('Content-Length', '155')
         .expect(400)
-        .expect((res) => {
-          let {body} = res;
-          assert.equal(body.error, "Bad Request");
-          assert.equal(JSON.stringify(body.validation), JSON.stringify({username:{ message: '"username" is required', type: 'any.required'}}));
+        .expect(res => {
+          let { body } = res;
+          assert.equal(body.error, 'Bad Request');
+          assert.equal(
+            JSON.stringify(body.validation),
+            JSON.stringify({
+              username: {
+                message: '"username" is required',
+                type: 'any.required'
+              }
+            })
+          );
         })
         .end(done);
     });
@@ -28,15 +33,23 @@ module.exports = (app) => {
       request(app)
         .post('/api/v1/authenticate')
         .send({
-          username: "test"
+          username: 'test'
         })
         .expect('Content-Type', /json/)
         .expect('Content-Length', '155')
         .expect(400)
-        .expect((res) => {
-          let {body} = res;
-          assert.equal(body.error, "Bad Request");
-          assert.equal(JSON.stringify(body.validation), JSON.stringify({password:{ message: '"password" is required', type: 'any.required'}}));
+        .expect(res => {
+          let { body } = res;
+          assert.equal(body.error, 'Bad Request');
+          assert.equal(
+            JSON.stringify(body.validation),
+            JSON.stringify({
+              password: {
+                message: '"password" is required',
+                type: 'any.required'
+              }
+            })
+          );
         })
         .end(done);
     });
@@ -51,8 +64,8 @@ module.exports = (app) => {
         })
         .expect('Content-Type', /json/)
         .expect(200)
-        .expect((res) => {
-          let {body} = res;
+        .expect(res => {
+          let { body } = res;
           assert.exists(body.data.user);
           assert.exists(body.data.jwt);
           assert.equal(body.data.user.username, username);
@@ -65,13 +78,13 @@ module.exports = (app) => {
         .post('/api/v1/authenticate')
         .send({
           username: username,
-          password: "wrong"
+          password: 'wrong'
         })
         .expect('Content-Type', /json/)
         .expect(401)
-        .expect((res) => {
-          let {body} = res;
-          assert.equal(body.error, "Unauthorized");
+        .expect(res => {
+          let { body } = res;
+          assert.equal(body.error, 'Unauthorized');
         })
         .end(done);
     });
@@ -80,14 +93,14 @@ module.exports = (app) => {
       request(app)
         .post('/api/v1/authenticate')
         .send({
-          username: username + "-wrong",
-          password: "test"
+          username: username + '-wrong',
+          password: 'test'
         })
         .expect('Content-Type', /json/)
         .expect(401)
-        .expect((res) => {
-          let {body} = res;
-          assert.equal(body.error, "Unauthorized");
+        .expect(res => {
+          let { body } = res;
+          assert.equal(body.error, 'Unauthorized');
         })
         .end(done);
     });
@@ -96,14 +109,14 @@ module.exports = (app) => {
       request(app)
         .post('/api/v1/authenticate')
         .send({
-          username: username + "-wrong",
-          password: "wrong"
+          username: username + '-wrong',
+          password: 'wrong'
         })
         .expect('Content-Type', /json/)
         .expect(401)
-        .expect((res) => {
-          let {body} = res;
-          assert.equal(body.error, "Unauthorized");
+        .expect(res => {
+          let { body } = res;
+          assert.equal(body.error, 'Unauthorized');
         })
         .end(done);
     });
@@ -117,14 +130,13 @@ module.exports = (app) => {
         })
         .expect('Content-Type', /json/)
         .expect(200)
-        .expect((res) => {
-          let {body} = res;
+        .expect(res => {
+          let { body } = res;
           assert.exists(body.data.user);
           assert.exists(body.data.jwt);
           assert.equal(body.data.user.username, username);
         })
         .end(done);
     });
-
   });
 };

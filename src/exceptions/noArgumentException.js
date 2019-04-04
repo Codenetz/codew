@@ -1,9 +1,9 @@
 class noArgumentException extends Error {
-  constructor (message) {
+  constructor(message) {
     super();
     Error.captureStackTrace(this, this.constructor);
     this.name = 'noArgumentException';
-    this.message = message || "";
+    this.message = message || '';
   }
 }
 module.exports = noArgumentException;

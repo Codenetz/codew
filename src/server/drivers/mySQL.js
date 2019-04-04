@@ -1,8 +1,6 @@
-const
-  mysql = require("mysql2/promise");
+const mysql = require('mysql2/promise');
 
-module.exports = (app) => {
-
+module.exports = app => {
   const {
     MYSQL_HOST,
     MYSQL_USER,
@@ -19,5 +17,5 @@ module.exports = (app) => {
     database: MYSQL_DEFAULT_DATABASE
   });
 
-  app.set("MYSQL_POOL", POOL);
+  app.set('MYSQL_POOL', POOL);
 };

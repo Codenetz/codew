@@ -1,1 +1,1 @@
-module.exports.USER_TABLE = "cdw_user";
+module.exports.USER_TABLE = 'cdw_user';

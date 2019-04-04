@@ -1,5 +1,5 @@
 let path = require('path');
-require("dotenv").config({path: path.resolve(process.cwd(), '.env.test')});
+require('dotenv').config({ path: path.resolve(process.cwd(), '.env.test') });
 
 require('./lib/is');
 require('./lib/controllerTest');

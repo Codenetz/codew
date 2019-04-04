@@ -1,6 +1,5 @@
-let
-  mySQL = require("../src/server/drivers/mySQL");
+let mySQL = require('../src/server/drivers/mySQL');
 
-module.exports = (app) => {
+module.exports = app => {
   mySQL(app);
 };

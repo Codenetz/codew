@@ -1,16 +1,14 @@
-let
-  ip = require("../utils/ip"),
-  geolocation = require("../utils/geolocation"),
-  {LANGUAGE_QUERY_PARAMETER} = require("../constants");
+let ip = require('../utils/ip');
+let geolocation = require('../utils/geolocation');
+let { LANGUAGE_QUERY_PARAMETER } = require('../constants');
 
 class clientLanguage {
-
   constructor(app, request, response) {
     this.app = app;
 
     this.request = request;
     this.response = response;
-    this.domain = this.app.settings.ENV.vars.MAIN_HOST;
+    this.domain = app.settings.ENV.vars.MAIN_HOST;
     this.change_language_parameter = LANGUAGE_QUERY_PARAMETER;
   }
 
@@ -21,7 +19,7 @@ class clientLanguage {
    * @return {boolean}
    */
   isLanguageForChange() {
-    return (this.findLanguageByQueryParameter() !== null);
+    return this.findLanguageByQueryParameter() !== null;
   }
 
   /** Checks if it is a new client on a language subdomain different than the default language subdomain.
@@ -32,7 +30,12 @@ class clientLanguage {
    * @return {boolean}
    */
   isNewClientOnSubdomain() {
-    return !this.isDefaultLanguage() && this.getSubdomain() !== null && !this.getLocaleFromCookie() && this.getClientIP();
+    return (
+      !this.isDefaultLanguage() &&
+      this.getSubdomain() !== null &&
+      !this.getLocaleFromCookie() &&
+      this.getClientIP()
+    );
   }
 
   /** Checks if it is a new client on the root domain
@@ -42,7 +45,12 @@ class clientLanguage {
    * @return {boolean}
    */
   isNewClientOnRootDomain() {
-    return !this.isDefaultLanguage() && this.getSubdomain() === null && !this.getLocaleFromCookie() && this.getClientIP();
+    return (
+      !this.isDefaultLanguage() &&
+      this.getSubdomain() === null &&
+      !this.getLocaleFromCookie() &&
+      this.getClientIP()
+    );
   }
 
   /** Checks if client is trying to open different language subdomain.
@@ -52,7 +60,11 @@ class clientLanguage {
    * @return {boolean}
    */
   isOnDifferentLanguageSubdomain() {
-    return this.getSubdomain() !== null && this.findLanguageByCookie() && this.getSubdomain() !== this.findLanguageByCookie().domain;
+    return (
+      this.getSubdomain() !== null &&
+      this.findLanguageByCookie() &&
+      this.getSubdomain() !== this.findLanguageByCookie().domain
+    );
   }
 
   /** Checks if client tries to open default subdomain.
@@ -72,7 +84,11 @@ class clientLanguage {
    * @return {boolean}
    */
   isMissingSubdomainWithCookie() {
-    return (!this.isDefaultLanguage() && this.getSubdomain() === null && this.getLocaleFromCookie());
+    return (
+      !this.isDefaultLanguage() &&
+      this.getSubdomain() === null &&
+      this.getLocaleFromCookie()
+    );
   }
 
   /** Checks if client tries to open default language by subdomain or cookie.
@@ -83,7 +99,10 @@ class clientLanguage {
    */
   isDefaultLanguage() {
     let default_language = this.getDefaultLanguage();
-    return (this.getSubdomain() === default_language.domain) || (this.getLocaleFromCookie() === default_language.code);
+    return (
+      this.getSubdomain() === default_language.domain ||
+      this.getLocaleFromCookie() === default_language.code
+    );
   }
 
   /** @return {string} */
@@ -109,7 +128,7 @@ class clientLanguage {
     this.response.cookie('locale', locale, {
       maxAge: 1000 * 60 * 60 * 24 * 3,
       httpOnly: false,
-      domain: "." + this.domain
+      domain: '.' + this.domain
     });
   }
 
@@ -129,7 +148,7 @@ class clientLanguage {
    * @return {array}
    */
   getLanguages() {
-    return this.app.get("languages");
+    return this.app.get('languages');
   }
 
   /** Gets all platform available translations
@@ -137,7 +156,7 @@ class clientLanguage {
    * @return {array}
    */
   getTranslations() {
-    return this.translations = this.app.get("translations");
+    return (this.translations = this.app.get('translations'));
   }
 
   /** Gets current subdomain
@@ -145,7 +164,9 @@ class clientLanguage {
    * @return {(string|null)}
    */
   getSubdomain() {
-    return this.request.subdomains.length > 0 ? this.request.subdomains[0] : null;
+    return this.request.subdomains.length > 0
+      ? this.request.subdomains[0]
+      : null;
   }
 
   /** Gets current language locale from cookie
@@ -153,7 +174,9 @@ class clientLanguage {
    * @return {(string|null)}
    */
   getLocaleFromCookie() {
-    return this.request.cookies && this.request.cookies.locale ? this.request.cookies.locale : null;
+    return this.request.cookies && this.request.cookies.locale
+      ? this.request.cookies.locale
+      : null;
   }
 
   /** Gets translation object based on the subdomain
@@ -161,14 +184,12 @@ class clientLanguage {
    * @return {(object|null)}
    */
   getTranslationObject() {
-
-    let
-      translations = this.getTranslations(),
+    let translations = this.getTranslations(),
       language = this.findLanguageBySubdomain(),
       translation = null;
 
-    for(let i = 0; i < translations.length; i++) {
-      if(translations[i].code === language.code) {
+    for (let i = 0; i < translations.length; i++) {
+      if (translations[i].code === language.code) {
         translation = translations[i];
         break;
       }
@@ -182,12 +203,10 @@ class clientLanguage {
    * @return {object}
    */
   getDefaultLanguage() {
-
-    let
-      language = null,
+    let language = null,
       languages = this.getLanguages();
 
-    for(let i = 0; i < languages.length; i++) {
+    for (let i = 0; i < languages.length; i++) {
       language = languages[i].is_default === true ? languages[i] : language;
     }
 
@@ -201,7 +220,7 @@ class clientLanguage {
   async findLanguageByGeoLocation() {
     let code = await geolocation(this.getClientIP());
 
-    if(!code) {
+    if (!code) {
       return this.getDefaultLanguage();
     }
 
@@ -214,12 +233,11 @@ class clientLanguage {
    * @return {object}
    */
   findLanguageBySubdomain() {
-    let
-      language = null,
+    let language = null,
       languages = this.getLanguages(),
       subdomain = this.getSubdomain();
 
-    for(let i = 0; i < languages.length; i++) {
+    for (let i = 0; i < languages.length; i++) {
       language = languages[i].domain === subdomain ? languages[i] : language;
     }
 
@@ -233,12 +251,11 @@ class clientLanguage {
    * @return {(object|null)}
    */
   findLanguageByLocale(code) {
-    let
-      languages = this.getLanguages(),
+    let languages = this.getLanguages(),
       language = null;
 
-    for(let i = 0; i < languages.length; i++) {
-      if(languages[i].code == code) {
+    for (let i = 0; i < languages.length; i++) {
+      if (languages[i].code === code) {
         language = languages[i];
       }
     }
@@ -253,13 +270,12 @@ class clientLanguage {
    * @return {(object|null)}
    */
   findLanguageByCountryCode(code) {
-    let
-      languages = this.getLanguages(),
+    let languages = this.getLanguages(),
       language = null;
 
-    for(let i = 0; i < languages.length; i++) {
+    for (let i = 0; i < languages.length; i++) {
       for (let j = 0; j < languages[i].country_codes.length; j++) {
-        if(languages[i].country_codes[j] === code) {
+        if (languages[i].country_codes[j] === code) {
           language = languages[i];
         }
       }
@@ -284,7 +300,7 @@ class clientLanguage {
   findLanguageByQueryParameter() {
     let query = this.request.query;
 
-    if(!query[this.changeLanguageParameter]) {
+    if (!query[this.changeLanguageParameter]) {
       return null;
     }
 

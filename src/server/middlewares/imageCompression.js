@@ -1,19 +1,17 @@
-let
-  gm = require("gm"),
-  is = require("../utils/is");
+let gm = require('gm'),
+  is = require('../utils/is');
 
 module.exports = (name, req, res, next) => {
-
-  if(!req.files) {
-    return next("Property \"files\" is not found");
+  if (!req.files) {
+    return next('Property "files" is not found');
   }
 
-  if(typeof req.files[name] === "undefined") {
+  if (typeof req.files[name] === 'undefined') {
     return next();
   }
 
-  if(!is.array(req.files[name])) {
-    return next("The \"files." + name + "\" property must be an array");
+  if (!is.array(req.files[name])) {
+    return next('The "files.' + name + '" property must be an array');
   }
 
   let images = req.files[name];
@@ -22,7 +20,7 @@ module.exports = (name, req, res, next) => {
     return next();
   }
 
-  images.forEach((image) => {
+  images.forEach(image => {
     gm(image.path)
       .quality(70)
       .write(image.path, () => {});

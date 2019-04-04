@@ -1,9 +1,9 @@
 class invalidArgumentException extends Error {
-  constructor (message) {
+  constructor(message) {
     super();
     Error.captureStackTrace(this, this.constructor);
     this.name = 'invalidArgumentException';
-    this.message = message || "";
+    this.message = message || '';
   }
 }
 module.exports = invalidArgumentException;

@@ -1,15 +1,14 @@
 let logger = require('../../server/utils/logger');
 
 module.exports = (err, req, res, next) => {
-
   if (err.isServer) {
     logger.rawError(err);
   }
 
-  if(!err.output) {
+  if (!err.output) {
     logger.rawError(err);
     return res.status(400).json({
-      "statusCode": 400
+      statusCode: 400
     });
   }
 

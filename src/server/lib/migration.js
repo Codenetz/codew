@@ -1,24 +1,24 @@
-let
-  fs = require("fs"),
-  path = require("path"),
-  appMock = require("./appMock"),
-  logger = require("../../server/utils/logger"),
-  mySQL = require("../drivers/mySQL");
+let fs = require('fs'),
+  path = require('path'),
+  appMock = require('./appMock'),
+  logger = require('../../server/utils/logger'),
+  mySQL = require('../drivers/mySQL');
 
-const MIGRATION_VAR_DIR_PATH = __dirname + "/../../../var/";
-const MIGRATIONS = __dirname + "/../migrations.json";
-const DEFAULT_VALUE_VAR_FILE = {"latest":null,"history":[]};
+const MIGRATION_VAR_DIR_PATH = __dirname + '/../../../var/';
+const MIGRATIONS = __dirname + '/../migrations.json';
+const DEFAULT_VALUE_VAR_FILE = { latest: null, history: [] };
 const APP_MOCK = new appMock();
 
 class migration {
-
   constructor(migration_config_var_filename) {
     this.migration_config_var_file_name = migration_config_var_filename;
-    this.last_query = "";
+    this.last_query = '';
 
     this.createMigrationConfig();
     mySQL(APP_MOCK);
-    logger.info("DATABASE: " + APP_MOCK.settings.ENV.vars.MYSQL_DEFAULT_DATABASE);
+    logger.info(
+      'DATABASE: ' + APP_MOCK.settings.ENV.vars.MYSQL_DEFAULT_DATABASE
+    );
   }
 
   getMigrationConfigVarPath() {
@@ -31,22 +31,22 @@ class migration {
 
   /** Gets connection from pool */
   async getConnection() {
-    return await APP_MOCK.get("MYSQL_POOL").getConnection();
+    return await APP_MOCK.get('MYSQL_POOL').getConnection();
   }
 
-  async executeAutomaticUp () {
-    while (await this.executeNextUp()){
+  async executeAutomaticUp() {
+    while (await this.executeNextUp()) {
       // empty
     }
     return true;
   }
 
   write(path, json) {
-    fs.writeFileSync(path, JSON.stringify(json), "utf8");
+    fs.writeFileSync(path, JSON.stringify(json), 'utf8');
   }
 
   read(path) {
-    return JSON.parse(fs.readFileSync(path, "utf8"));
+    return JSON.parse(fs.readFileSync(path, 'utf8'));
   }
 
   getMigrations() {
@@ -67,9 +67,12 @@ class migration {
 
   createMigrationConfig() {
     try {
-      fs.writeFileSync(this.getMigrationConfigVarPath(), JSON.stringify(DEFAULT_VALUE_VAR_FILE), {flag: "wx"});
-    }
-    catch(err) {
+      fs.writeFileSync(
+        this.getMigrationConfigVarPath(),
+        JSON.stringify(DEFAULT_VALUE_VAR_FILE),
+        { flag: 'wx' }
+      );
+    } catch (err) {
       // empty
     }
   }
@@ -90,41 +93,43 @@ class migration {
 
   createHistoryObject(action, query, migration_path, error) {
     return {
-      "action": action,
-      "query": query,
-      "migration_path": migration_path,
-      "error": error,
-      "time": new Date()
+      action: action,
+      query: query,
+      migration_path: migration_path,
+      error: error,
+      time: new Date()
     };
   }
 
   async executeNextUp() {
-    let
-      migrations_path = this.getMigrations(),
+    let migrations_path = this.getMigrations(),
       migration_config = this.readConfig(),
       latest_migration = migration_config.latest,
       migration_latest_path_index = migrations_path.indexOf(latest_migration);
 
-    if(migrations_path.length === 0) {
-      logger.warning("No migrations found");
+    if (migrations_path.length === 0) {
+      logger.warning('No migrations found');
       return false;
     }
 
-    if(latest_migration !== null && migration_latest_path_index < 0) {
-      throw new Error("Latest path was not found in migrations config file.");
+    if (latest_migration !== null && migration_latest_path_index < 0) {
+      throw new Error('Latest path was not found in migrations config file.');
     }
 
     /** Get next migration path after the latest */
-    let migration_path = latest_migration === null ? migrations_path[0] : migrations_path[migration_latest_path_index+1];
+    let migration_path =
+      latest_migration === null
+        ? migrations_path[0]
+        : migrations_path[migration_latest_path_index + 1];
 
-    if(!migration_path) {
-      logger.warning("No migrations to be executed");
+    if (!migration_path) {
+      logger.warning('No migrations to be executed');
       return;
     }
 
-    let executed = await this.execute(migration_path, "up");
+    let executed = await this.execute(migration_path, 'up');
 
-    if(executed) {
+    if (executed) {
       this.setLatestMigration(migration_path);
     }
 
@@ -132,40 +137,41 @@ class migration {
   }
 
   async executeNextDown() {
-    let
-      migrations_path = this.getMigrations(),
+    let migrations_path = this.getMigrations(),
       migration_config = this.readConfig(),
       latest_migration = migration_config.latest,
       migration_latest_path_index = migrations_path.indexOf(latest_migration);
 
-    if(migrations_path.length === 0) {
-      logger.warning("No migrations found");
+    if (migrations_path.length === 0) {
+      logger.warning('No migrations found');
       return false;
     }
 
-    if(latest_migration === null) {
-      logger.warning("No migrations to be executed");
+    if (latest_migration === null) {
+      logger.warning('No migrations to be executed');
       return;
     }
 
-    if(migration_latest_path_index <= -1) {
-      throw new Error("Latest path was not found in migrations config file.");
+    if (migration_latest_path_index <= -1) {
+      throw new Error('Latest path was not found in migrations config file.');
     }
 
-    let executed = await this.execute(latest_migration, "down");
+    let executed = await this.execute(latest_migration, 'down');
 
-    if(executed) {
-      this.setLatestMigration((migration_latest_path_index <= 0) ? null : migrations_path[migration_latest_path_index-1]);
+    if (executed) {
+      this.setLatestMigration(
+        migration_latest_path_index <= 0
+          ? null
+          : migrations_path[migration_latest_path_index - 1]
+      );
     }
 
     return executed;
   }
 
-
   async execute(migration_path, action) {
-
-    if(["up", "down"].indexOf(action) <= -1) {
-      throw new Error("Incorrect value for parameter action");
+    if (['up', 'down'].indexOf(action) <= -1) {
+      throw new Error('Incorrect value for parameter action');
     }
 
     let migration_module = {};
@@ -181,18 +187,19 @@ class migration {
 
     this.last_query = query;
 
-    let
-      error = null,
+    let error = null,
       connection = await this.getConnection(),
-      result = await connection.query(query).catch((err) => {
+      result = await connection.query(query).catch(err => {
         logger.error(err.toString());
         error = err.toString();
       });
 
     /** Writes to history */
-    this.setHistoryMigration(this.createHistoryObject(action, query, migration_path, error));
+    this.setHistoryMigration(
+      this.createHistoryObject(action, query, migration_path, error)
+    );
 
-    if(!result) {
+    if (!result) {
       return false;
     }
 

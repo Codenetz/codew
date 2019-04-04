@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
-const DEVELOPMENT = "development";
-const PRODUCTION = "production";
-const TEST = "test";
+const DEVELOPMENT = 'development';
+const PRODUCTION = 'production';
+const TEST = 'test';
 
-let env = (process.env.NODE_ENV || DEVELOPMENT);
+let env = process.env.NODE_ENV || DEVELOPMENT;
 
 module.exports = {
   isProduction: env === PRODUCTION,

@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-let routes = require("./routing/routes");
+let routes = require('./routing/routes');
 
-module.exports = (app) => {
+module.exports = app => {
   routes(app);
 };

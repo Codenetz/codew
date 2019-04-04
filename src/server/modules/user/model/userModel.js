@@ -1,22 +1,24 @@
-"use strict";
+'use strict';
 
-let
-  model = require("./../../../core/model"),
-  {USER_TABLE} = require("../constants/tables");
+let model = require('./../../../core/model'),
+  { USER_TABLE } = require('../constants/tables');
 
 class userModel extends model {
-
   constructor(app) {
     super(app, USER_TABLE);
     this.app = app;
   }
 
   async getUserByUsernameAndPassword(username, password) {
-    let
-      connection = await this.getConnection(),
+    let connection = await this.getConnection(),
       [rows] = await connection
-        .execute("SELECT * FROM " + USER_TABLE + " WHERE username = ? AND password = ?;", [username, password])
-        .catch((error) => {
+        .execute(
+          'SELECT * FROM ' +
+            USER_TABLE +
+            ' WHERE username = ? AND password = ?;',
+          [username, password]
+        )
+        .catch(error => {
           connection.release();
           throw error;
         });
@@ -26,11 +28,12 @@ class userModel extends model {
   }
 
   async getUserByUsername(username) {
-    let
-      connection = await this.getConnection(),
+    let connection = await this.getConnection(),
       [rows] = await connection
-        .execute("SELECT * FROM " + USER_TABLE + " WHERE username = ?;", [username])
-        .catch((error) => {
+        .execute('SELECT * FROM ' + USER_TABLE + ' WHERE username = ?;', [
+          username
+        ])
+        .catch(error => {
           connection.release();
           throw error;
         });
@@ -40,11 +43,10 @@ class userModel extends model {
   }
 
   async getUserByEmail(email) {
-    let
-      connection = await this.getConnection(),
+    let connection = await this.getConnection(),
       [rows] = await connection
-        .execute("SELECT * FROM " + USER_TABLE + " WHERE email = ?;", [email])
-        .catch((error) => {
+        .execute('SELECT * FROM ' + USER_TABLE + ' WHERE email = ?;', [email])
+        .catch(error => {
           connection.release();
           throw error;
         });
@@ -62,22 +64,24 @@ class userModel extends model {
   }
 
   async createUser(username, password, email, role) {
-    let
-      connection = await this.getConnection(),
-      [result] = await connection.execute("INSERT INTO " + USER_TABLE +
-        " (`username`, `password`, `email`, `role`, `date_added`, `date_modified`) " +
-        " VALUES " +
-        "(?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())",
-      [username, password, email, role]
-      )
-        .catch((error) => {
+    let connection = await this.getConnection(),
+      [result] = await connection
+        .execute(
+          'INSERT INTO ' +
+            USER_TABLE +
+            ' (`username`, `password`, `email`, `role`, `date_added`, `date_modified`) ' +
+            ' VALUES ' +
+            '(?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())',
+          [username, password, email, role]
+        )
+        .catch(error => {
           connection.release();
           throw error;
         });
 
     connection.release();
 
-    if(result.insertId) {
+    if (result.insertId) {
       return this.getItemById(result.insertId);
     }
 

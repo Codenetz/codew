@@ -1,18 +1,16 @@
-let
-  Joi = require("joi"),
-  Boom = require("boom"),
-  env = require("../../../boot/env"),
-  logger = require("../../server/utils/logger");
+let Joi = require('joi'),
+  Boom = require('boom'),
+  env = require('../../../boot/env'),
+  logger = require('../../server/utils/logger');
 
 module.exports = (schema, type, req, res, next) => {
-
-  if(["body", "query", "params", "files"].indexOf(type) < 0) {
-    return next("Request type is not correct");
+  if (['body', 'query', 'params', 'files'].indexOf(type) < 0) {
+    return next('Request type is not correct');
   }
 
-  let {error} = Joi.validate(req[type], schema);
+  let { error } = Joi.validate(req[type], schema);
 
-  if(!error) {
+  if (!error) {
     return next();
   }
 
@@ -22,11 +20,14 @@ module.exports = (schema, type, req, res, next) => {
   }
 
   let errors = {};
-  error.details.forEach((error) => {
+  error.details.forEach(error => {
     errors[error.context.key] = {
-      "message": env.vars.RESPONSE_VALIDATION_ERROR_MESSAGE === "true" ? error.message : null,
-      "type": error.type,
-      "value": error.context.value
+      message:
+        env.vars.RESPONSE_VALIDATION_ERROR_MESSAGE === 'true'
+          ? error.message
+          : null,
+      type: error.type,
+      value: error.context.value
     };
   });
 

@@ -1,8 +1,7 @@
-"use strict";
+'use strict';
 
-let
-  container = require("./container"),
-  {SERVICE_CONTAINER} = require("../constants");
+let container = require('./container'),
+  { SERVICE_CONTAINER } = require('../constants');
 
 class service extends container {
   constructor(app) {

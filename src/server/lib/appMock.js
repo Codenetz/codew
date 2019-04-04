@@ -1,11 +1,9 @@
-let
-  env = require("../../../boot/env");
+let env = require('../../../boot/env');
 
 class appMock {
-
   constructor() {
     this.vars = {
-      "ENV": env
+      ENV: env
     };
   }
 

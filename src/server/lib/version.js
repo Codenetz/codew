@@ -1,19 +1,20 @@
-let
-  fs = require("fs"),
-  crypto = require("crypto");
+let fs = require('fs'),
+  crypto = require('crypto');
 
-  class version {
-
+class version {
   get hash() {
-    return crypto.createHash("sha1").update(this.current).digest("hex");
+    return crypto
+      .createHash('sha1')
+      .update(this.current)
+      .digest('hex');
   }
 
   get current() {
-    return fs.readFileSync(this.path, "UTF-8");
+    return fs.readFileSync(this.path, 'UTF-8');
   }
 
   get path() {
-    return process.cwd() + "/.version";
+    return process.cwd() + '/.version';
   }
 
   updateMajor() {
@@ -29,9 +30,9 @@ let
   }
 
   update(key) {
-    let v = this.current.split(".").map((v) => parseInt(v) || 0);
+    let v = this.current.split('.').map(v => parseInt(v) || 0);
     v[key] = v[key] + 1;
-    fs.writeFileSync(this.path, v.join("."));
+    fs.writeFileSync(this.path, v.join('.'));
     return true;
   }
 }
