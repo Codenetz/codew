@@ -15,7 +15,6 @@ let express = require('express'),
   drivers = require('./drivers'),
   multer = require('multer'),
   errorMiddleware = require('./../src/server/middlewares/error'),
-  clientDevice = require('./../src/server/middlewares/clientDevice'),
   version = require('./../src/server/lib/version'),
   app = express();
 
@@ -98,9 +97,12 @@ module.exports = {
   },
   load: () => {
     return new Promise(resolve => {
-      app.listen(env.vars.SERVER_PORT, () => {
+      let server = app.listen(env.vars.SERVER_PORT, () => {
         return resolve(app);
       });
+
+      /** Sets max timeout */
+      server.setTimeout(Number(env.vars.SERVER_TIMEOUT));
     });
   }
 };
