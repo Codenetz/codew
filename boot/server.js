@@ -3,20 +3,18 @@
 let express = require('express'),
   morgan = require('morgan'),
   helmet = require('helmet'),
-  uniqid = require('uniqid'),
   cookieParser = require('cookie-parser'),
   bodyParser = require('body-parser'),
-  path = require('path'),
   env = require('./env'),
   modules = require('./modules'),
   language = require('./language'),
   translations = require('./translations'),
   containers = require('./containers'),
   drivers = require('./drivers'),
-  multer = require('multer'),
   errorMiddleware = require('./../src/server/middlewares/error'),
   version = require('./../src/server/lib/version'),
   proxy = require('./proxy'),
+  multer = require('./multer'),
   app = express();
 
 app.set('ENV', env);
@@ -42,24 +40,8 @@ if (env.isDevelopment) {
   app.use(morgan('combined'));
 }
 
-app.set(
-  'multer',
-  multer({
-    storage: multer.diskStorage({
-      destination: function(req, file, cb) {
-        cb(null, 'public/uploads/');
-      },
-
-      filename: function(req, file, cb) {
-        cb(null, uniqid() + path.extname(file.originalname));
-      }
-    }),
-
-    limits: {
-      fileSize: 15000000 //15MB
-    }
-  })
-);
+/** Loads multer */
+multer(app);
 
 app.set('views', './src/client/views');
 app.set('view engine', 'ejs');
