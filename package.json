@@ -23,12 +23,12 @@
     "eslint": "^4.16.0",
     "eslint-plugin-react": "^7.6.0",
     "mocha": "^5.0.1",
-    "morgan": "^1.9.0",
+    "morgan": "^1.9.1",
     "prettier": "^1.16.4",
     "supertest": "^3.0.0"
   },
   "dependencies": {
-    "babel-core": "^6.26.0",
+    "babel-core": "^6.26.3",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^7.1.4",
     "babel-preset-latest": "^6.24.1",
@@ -36,7 +36,7 @@
     "body-parser": "^1.18.2",
     "boom": "^7.1.1",
     "cookie-parser": "^1.4.3",
-    "css-loader": "^0.28.11",
+    "css-loader": "^2.1.1",
     "dotenv": "^4.0.0",
     "ejs": "^2.5.7",
     "eslint-loader": "^2.1.2",
@@ -62,6 +62,6 @@
     "uglifyjs-webpack-plugin": "^1.2.2",
     "uniqid": "^4.1.1",
     "webpack": "^4.3.0",
-    "webpack-cli": "^2.0.10"
+    "webpack-cli": "^3.3.0"
   }
 }
