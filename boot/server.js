@@ -16,10 +16,14 @@ let express = require('express'),
   multer = require('multer'),
   errorMiddleware = require('./../src/server/middlewares/error'),
   version = require('./../src/server/lib/version'),
+  proxy = require('./proxy'),
   app = express();
 
 app.set('ENV', env);
 app.set('VERSION', new version());
+
+/** Loads proxy server */
+proxy(app);
 
 /** Take care of HTTP headers to secure the app */
 app.use(helmet());
