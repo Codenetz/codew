@@ -1,6 +1,6 @@
-let ip = require('../utils/ip');
-let geolocation = require('../utils/geolocation');
-let { LANGUAGE_QUERY_PARAMETER } = require('../constants');
+let ip = require('../utils/ip'),
+  geolocation = require('../utils/geolocation'),
+  { LANGUAGE_QUERY_PARAMETER } = require('../constants');
 
 class clientLanguage {
   constructor(app, request, response) {
@@ -8,7 +8,7 @@ class clientLanguage {
 
     this.request = request;
     this.response = response;
-    this.domain = app.settings.ENV.vars.MAIN_HOST;
+    this.domain = this.app.settings.ENV.vars.MAIN_HOST;
     this.change_language_parameter = LANGUAGE_QUERY_PARAMETER;
   }
 
@@ -98,7 +98,7 @@ class clientLanguage {
    * @return {boolean}
    */
   isDefaultLanguage() {
-    let default_language = this.getDefaultLanguage();
+    const default_language = this.getDefaultLanguage();
     return (
       this.getSubdomain() === default_language.domain ||
       this.getLocaleFromCookie() === default_language.code
@@ -117,7 +117,7 @@ class clientLanguage {
    */
   changeLanguage(language, redirect_to) {
     this.setLocaleCookie(language.code);
-    return this.response.redirect(301, redirect_to);
+    return this.response.redirect(307, redirect_to);
   }
 
   /** Sets locale cookie for 3 days
@@ -218,13 +218,16 @@ class clientLanguage {
    * @return {object}
    */
   async findLanguageByGeoLocation() {
-    let code = await geolocation(this.getClientIP());
+    const code = await geolocation(
+      this.app.get('MAXMIND_LOOKUP'),
+      this.getClientIP()
+    );
 
     if (!code) {
       return this.getDefaultLanguage();
     }
 
-    let language = this.findLanguageByCountryCode(code);
+    const language = this.findLanguageByCountryCode(code);
     return language !== null ? language : this.getDefaultLanguage();
   }
 
@@ -255,7 +258,7 @@ class clientLanguage {
       language = null;
 
     for (let i = 0; i < languages.length; i++) {
-      if (languages[i].code === code) {
+      if (String(languages[i].code) === String(code)) {
         language = languages[i];
       }
     }
@@ -289,7 +292,7 @@ class clientLanguage {
    * @return {object}
    */
   findLanguageByCookie() {
-    let language = this.findLanguageByLocale(this.getLocaleFromCookie());
+    const language = this.findLanguageByLocale(this.getLocaleFromCookie());
     return language !== null ? language : this.getDefaultLanguage();
   }
 
@@ -298,7 +301,7 @@ class clientLanguage {
    * @return {object}
    */
   findLanguageByQueryParameter() {
-    let query = this.request.query;
+    const query = this.request.query;
 
     if (!query[this.changeLanguageParameter]) {
       return null;
