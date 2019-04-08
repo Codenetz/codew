@@ -8,13 +8,13 @@ let express = require('express'),
   env = require('./env'),
   modules = require('./modules'),
   language = require('./language'),
-  translations = require('./translations'),
   containers = require('./containers'),
   drivers = require('./drivers'),
   errorMiddleware = require('./../src/server/middlewares/error'),
   version = require('./../src/server/lib/version'),
   proxy = require('./proxy'),
   multer = require('./multer'),
+  maxmind = require('maxmind'),
   app = express();
 
 app.set('ENV', env);
@@ -43,6 +43,14 @@ if (env.isDevelopment) {
 /** Loads multer */
 multer(app);
 
+if (env.vars.ENABLE_MULTILANGUAGE === 'true') {
+  /** Loads mmdb */
+  app.set('MAXMIND_LOOKUP', maxmind.openSync('./var/geo/geo.mmdb'));
+
+  /** Loads available languages */
+  language(app);
+}
+
 app.set('views', './src/client/views');
 app.set('view engine', 'ejs');
 
@@ -58,14 +66,6 @@ drivers(app);
  */
 if (env.isDevelopment) {
   app.use(express.static('public'));
-}
-
-if (env.vars.ENABLE_MULTILANGUAGE === 'true') {
-  /** Loads available languages */
-  language(app);
-
-  /** Loads translations */
-  translations(app);
 }
 
 /** Loads modules */

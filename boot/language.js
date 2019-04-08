@@ -1,4 +1,6 @@
-module.exports = app => {
+let fs = require('fs');
+
+module.exports = async app => {
   /** Gets available languages.
    *  They could be fetched from a file, api, written here, etc ...
    */
@@ -26,5 +28,21 @@ module.exports = app => {
     }
   ];
 
+  const translations = [];
+
+  for (let i = 0; i < languages.length; i++) {
+    let language = languages[i],
+      filename = language.code + '.json',
+      filepath = __dirname + '/../translations/' + filename,
+      translation = JSON.parse(fs.readFileSync(filepath, 'utf8'));
+
+    translations.push({
+      code: language.code,
+      filename: filename,
+      translation: translation
+    });
+  }
+
   app.set('languages', languages);
+  app.set('translations', translations);
 };

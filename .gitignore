@@ -9,3 +9,4 @@ npm-debug.log
 /var/migration_test.json
 /public/assets/dist/
 /public/uploads/
+/var/geo/
