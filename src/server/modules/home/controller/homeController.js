@@ -8,15 +8,7 @@ class homeController extends controller {
   }
 
   async homeAction(req, res, next) {
-    return res.render('index', {
-      assetFileName:
-        'desktop' +
-        (req.clientDevice && req.clientDevice.is_mobile === true
-          ? 'mobile'
-          : '') +
-        req.app.get('VERSION').hash,
-      version_hash: req.app.get('VERSION').hash
-    });
+    return this.render(req, res, {}, {});
   }
 }
 

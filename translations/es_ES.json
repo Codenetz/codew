@@ -1,3 +1,5 @@
 {
-  "home.title": "Que pasa"
+  "home.title": "Que pasa",
+  "default.meta_data.title": "Título",
+  "default.meta_data.description": "Descripción"
 }

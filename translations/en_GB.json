@@ -1,3 +1,5 @@
 {
-  "home.title": "Welcome"
+  "home.title": "Welcome",
+  "default.meta_data.title": "Title",
+  "default.meta_data.description": "Description"
 }

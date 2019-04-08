@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon app.js",
     "test": "node ./node_modules/mocha/bin/mocha tests/**/*.js",
-    "webpack": "node node_modules/webpack-cli/bin/webpack.js --config webpack.config.js --progress"
+    "webpack": "node node_modules/webpack-cli/bin/cli.js --config webpack.config.js --progress"
   },
   "repository": {
     "type": "git",
