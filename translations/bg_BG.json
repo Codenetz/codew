@@ -1,3 +1,5 @@
 {
-  "home.title": "Заглавие на началото"
+  "home.title": "Заглавие на началото",
+  "default.meta_data.title": "Заглавие",
+  "default.meta_data.description": "Описание"
 }

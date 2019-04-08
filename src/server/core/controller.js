@@ -1,7 +1,9 @@
 'use strict';
 
 let logger = require('./../../../src/server/utils/logger'),
+  url = require('./../../../src/server/utils/url'),
   noArgumentException = require('./../../../src/exceptions/noArgumentException'),
+  translation = require('./../lib/translation'),
   invalidArgumentException = require('./../../../src/exceptions/invalidArgumentException');
 
 class controller {
@@ -29,6 +31,98 @@ class controller {
     data = data || {};
     status_code = typeof status_code === 'undefined' ? 200 : status_code;
     return res.status(status_code).json({ data });
+  }
+
+  /**
+   * @var object req App request object
+   * @var object res App response object
+   * @var object meta Meta data
+   * @var object og OG data
+   */
+  render(req, res, meta, og) {
+    meta = typeof meta === 'undefined' ? {} : meta;
+    og = typeof og === 'undefined' ? {} : og;
+
+    const {
+      NODE_ENV,
+      MAIN_HOST,
+      RESOURCE_HOST
+    } = req.app.get('ENV').vars;
+
+    let in_production = NODE_ENV === 'production',
+      default_meta = {
+        title: {
+          text: 'default.meta_data.title'
+        },
+        description: {
+          text: 'default.meta_data.description'
+        },
+        canonical: req.url,
+        paginated: false,
+        index: 'INDEX'
+      },
+      default_og = {
+        title: {
+          text: 'default.meta_data.title'
+        },
+        author: null,
+        host: MAIN_HOST,
+        image: RESOURCE_HOST + '/common/images/official.jpeg',
+        url: url.full(req),
+        description: {
+          text: 'default.meta_data.description'
+        },
+        type: 'website'
+      };
+
+    res.cookie('production', in_production, {
+      maxAge: 1000 * 60 * 60 * 24 * 1,
+      httpOnly: false,
+      domain: '.' + MAIN_HOST
+    });
+
+    req.default_language = req.default_language || {};
+    req.language = req.language || {};
+    req.supported_languages = req.supported_languages || [];
+
+    return res.render('index', {
+      asset_file_name:
+        'desktop' +
+        (req.clientDevice && req.clientDevice.is_mobile === true
+          ? 'mobile'
+          : '') +
+        req.app.get('VERSION').hash,
+      version_hash: req.app.get('VERSION').hash,
+      in_production: in_production,
+      default_language: {
+        name: req.default_language.name,
+        code: req.default_language.code
+      },
+      current_language: {
+        name: req.language.name,
+        code: req.language.code
+      },
+      supported_languages: req.supported_languages.map(language => {
+        return {
+          name: language.name,
+          code: language.code
+        };
+      }),
+      language_code:
+        req.language && req.language.code
+          ? req.language.code
+          : req.default_language.code,
+      ENV: in_production ? 'production' : 'development',
+      MAIN_HOST,
+      RESOURCE_HOST,
+      meta: Object.assign(default_meta, meta),
+      og: Object.assign(default_og, og),
+      translation: new translation(
+        req.translation && req.translation.translation
+          ? req.translation.translation
+          : null
+      )
+    });
   }
 
   bindScope() {
