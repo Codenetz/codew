@@ -27,7 +27,12 @@ module.exports = app => {
         },
 
         filename: (req, file, cb) => {
-          cb(null, uniqid() + path.extname(file.originalname));
+          let extension = path.extname(file.originalname).toLowerCase();
+          extension =
+            ['.jpg', '.png', '.gif'].indexOf(extension) >= 0
+              ? extension
+              : '.jpg';
+          cb(null, uniqid() + extension);
         }
       }),
 
