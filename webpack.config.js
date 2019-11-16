@@ -40,7 +40,8 @@ let stylus_loader = () => {
 const config = {
   entry: {
     ['desktop' + version.hash]: './src/client/desktop/app.js',
-    ['mobile' + version.hash]: './src/client/mobile/app.js'
+    ['mobile' + version.hash]: './src/client/mobile/app.js',
+    ['admin' + version.hash]: './src/client/admin/app.js'
   },
   output: {
     filename: '[name].js',
