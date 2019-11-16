@@ -1,6 +1,6 @@
 import { Entity, Column, ManyToOne, JoinColumn } from "typeorm";
 import { User } from "../../user/entity/User";
-import { Base } from "../../home/entity/Base";
+import { Base } from "../../../core/entity/Base";
 import { IMAGE_TABLE } from "../constants/tables";
 
 @Entity({ name: IMAGE_TABLE })

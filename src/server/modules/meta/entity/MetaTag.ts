@@ -1,5 +1,5 @@
 import { Entity, Column, ManyToOne, JoinColumn } from "typeorm";
-import { Base } from "../../home/entity/Base";
+import { Base } from "../../../core/entity/Base";
 import { META_TAG_TABLE } from "../constants/tables";
 import { Meta } from "./Meta";
 

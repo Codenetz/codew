@@ -479,7 +479,7 @@ Example of a schema
 
 ```
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
-import { Base } from "../../home/entity/Base";
+import { Base } from "../../../core/entity/Base";
 import { USER_TABLE } from "../constants/tables";
 @Entity({ name: 'user' })
 export class User extends Base {
