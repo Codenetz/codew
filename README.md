@@ -1,6 +1,6 @@
 ## **Codew**
 
-Full-stack JavaScript framework build on top of [Express](https://expressjs.com/) with [MySQL](https://www.mysql.com/) database support and [React](https://reactjs.org/) for the user interface.
+Full-stack boilerplate on [Express](https://expressjs.com/) with [MySQL](https://www.mysql.com/) database support and [React](https://reactjs.org/) for the user interface.
 
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
@@ -83,9 +83,8 @@ $ npm install
 
 ---
 
-This command will run the framework tests to make sure everything works correctly.
+Run tests to make sure everything works correctly.
 
-_You can skip this command if you like._
 
 ```
 $ npm test
@@ -139,7 +138,7 @@ Current version can be accessed using `app.get("VERSION")`, anywhere within your
 
 ## **Async/await**
 
-In order to keep the code simple & readable the framework is written with `async` and `await` Promise-based approach.
+In order to keep the code simple & readable everything is written with `async` and `await` Promise-based approach.
 
 ## **Modules**
 
@@ -392,7 +391,7 @@ Container is a registry for objects from a certain type under one domain and by 
 
 **_Usage_**
 
-By default the framework comes with 2 containers.
+By default they are 2 containers.
 
 - `MODEL` References of [models](#models).
 
@@ -582,7 +581,7 @@ Templates are written using [ejs](https://www.npmjs.com/package/ejs)
 
 ## **Webpack**
 
-The framework comes with fully configured webpack for compiling the front-end.
+Fully configured webpack for compiling the front-end.
 
 Supports
 
