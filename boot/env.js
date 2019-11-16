@@ -11,5 +11,6 @@ module.exports = {
   isDevelopment: env === DEVELOPMENT,
   isTest: env === TEST,
   env: env,
-  vars: process.env
+  vars: process.env,
+  basePath: process.cwd()
 };

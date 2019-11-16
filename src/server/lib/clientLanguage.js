@@ -23,7 +23,7 @@ class clientLanguage {
   }
 
   /** Checks if it is a new client on a language subdomain different than the default language subdomain.
-   * To check if it is on the default subdomain use the isOnDefaultSubdomain() method.
+   * To exchange if it is on the default subdomain use the isOnDefaultSubdomain() method.
    *
    * es.example
    *

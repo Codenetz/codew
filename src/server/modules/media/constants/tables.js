@@ -1,0 +1,1 @@
+module.exports.IMAGE_TABLE = 'codew_media_image';

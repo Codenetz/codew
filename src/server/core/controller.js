@@ -18,6 +18,18 @@ class controller {
     this.bindScope();
   }
 
+  trimPayload(payload) {
+    Object.keys(payload).map(key => {
+      payload[key] =
+        typeof payload[key] === 'string' || payload[key] instanceof String
+          ? payload[key].trim()
+          : payload[key];
+      return key;
+    });
+
+    return payload;
+  }
+
   /**
    * @var object res App response object
    * @var object data Data to be send back to client
@@ -33,45 +45,89 @@ class controller {
     return res.status(status_code).json({ data });
   }
 
+  metaResponse(req, res, meta, og) {
+    meta = typeof meta === 'undefined' ? {} : meta;
+    og = typeof og === 'undefined' ? {} : og;
+
+    if (typeof res === 'undefined') {
+      throw new noArgumentException();
+    }
+
+    const { MAIN_HOST, MAIN_HOST_PROTOCOL } = req.app.get('ENV').vars;
+
+    let default_meta = {
+        title: 'default meta title',
+        description: 'default meta description',
+        canonical: req.url,
+        paginated: false,
+        index: 'INDEX'
+      },
+      default_og = {
+        title: 'default meta title',
+        author: null,
+        host: MAIN_HOST,
+        image:
+          MAIN_HOST_PROTOCOL +
+          '://' +
+          MAIN_HOST +
+          '/assets/images/default-og-image.jpg',
+        url: url.withoutParams(req),
+        description: 'default meta description',
+        type: 'website'
+      };
+
+    return res.status(200).json({
+      meta: Object.assign(default_meta, meta),
+      og: Object.assign(default_og, og)
+    });
+  }
+
   /**
    * @var object req App request object
    * @var object res App response object
    * @var object meta Meta data
    * @var object og OG data
    */
-  render(req, res, meta, og) {
+  render(req, res, meta, og, config = {}) {
     meta = typeof meta === 'undefined' ? {} : meta;
     og = typeof og === 'undefined' ? {} : og;
+
+    config = Object.assign(
+      {
+        asset_file_name: 'desktop' + req.app.get('VERSION').hash
+      },
+      config
+    );
 
     const {
       NODE_ENV,
       MAIN_HOST,
-      RESOURCE_HOST
+      MAIN_HOST_PROTOCOL,
+      RESOURCE_HOST,
+      FACEBOOK_APP_ID,
+      GOOGLE_API_KEY,
+      GOOGLE_ANALYTICS_KEY
     } = req.app.get('ENV').vars;
 
     let in_production = NODE_ENV === 'production',
       default_meta = {
-        title: {
-          text: 'default.meta_data.title'
-        },
-        description: {
-          text: 'default.meta_data.description'
-        },
+        title: 'default meta title',
+        description: 'default meta description',
         canonical: req.url,
         paginated: false,
         index: 'INDEX'
       },
       default_og = {
-        title: {
-          text: 'default.meta_data.title'
-        },
+        title: 'default meta title',
         author: null,
         host: MAIN_HOST,
-        image: RESOURCE_HOST + '/common/images/official.jpeg',
-        url: url.full(req),
-        description: {
-          text: 'default.meta_data.description'
-        },
+        image:
+          MAIN_HOST_PROTOCOL +
+          '://' +
+          MAIN_HOST +
+          '/assets/images/default-og-image.jpg',
+        url: url.withoutParams(req),
+        description: 'default meta description',
         type: 'website'
       };
 
@@ -86,12 +142,7 @@ class controller {
     req.supported_languages = req.supported_languages || [];
 
     return res.render('index', {
-      asset_file_name:
-        'desktop' +
-        (req.clientDevice && req.clientDevice.is_mobile === true
-          ? 'mobile'
-          : '') +
-        req.app.get('VERSION').hash,
+      asset_file_name: config.asset_file_name,
       version_hash: req.app.get('VERSION').hash,
       in_production: in_production,
       default_language: {
@@ -114,7 +165,10 @@ class controller {
           : req.default_language.code,
       ENV: in_production ? 'production' : 'development',
       MAIN_HOST,
+      GOOGLE_API_KEY,
+      GOOGLE_ANALYTICS_KEY,
       RESOURCE_HOST,
+      FACEBOOK_APP_ID,
       meta: Object.assign(default_meta, meta),
       og: Object.assign(default_og, og),
       translation: new translation(

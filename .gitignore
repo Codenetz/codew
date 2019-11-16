@@ -4,9 +4,13 @@
 npm-debug.log
 .env
 .env.test
-.version
 /var/migration.json
 /var/migration_test.json
 /public/assets/dist/
 /public/uploads/
+/public/cache/
 /var/geo/
+.vscode/
+.history/
+package-lock.json
+/.certs/

@@ -9,14 +9,58 @@ class userModel extends model {
     this.app = app;
   }
 
-  async getUserByUsernameAndPassword(username, password) {
+  async fetchUsers(
+    limit = null,
+    offset = null,
+    count = false,
+    search = null,
+    order = null
+  ) {
+    let selection = count === true ? 'COUNT(*) as items_count' : '*';
+
+    let sql =
+        'SELECT ' + selection + ' FROM ' + USER_TABLE + ' WHERE deleted = 0 ',
+      bindedParams = [];
+
+    if (search && search.length) {
+      sql += 'AND username LIKE ? OR email LIKE ? ';
+      bindedParams.push('%' + search + '%');
+      bindedParams.push('%' + search + '%');
+    }
+
+    if (order && typeof order !== 'undefined' && order.length >= 2) {
+      sql += 'ORDER BY ' + order[0] + ' ' + order[1] + ' ';
+    }
+
+    if (limit) {
+      sql += ' ';
+      sql += 'LIMIT ? ';
+      bindedParams.push(parseInt(limit) || 0);
+    }
+    if (offset) {
+      sql += ' ';
+      sql += 'OFFSET ? ';
+      bindedParams.push(parseInt(offset) || 0);
+    }
+
+    let connection = await this.getConnection(),
+      [rows] = await connection.execute(sql, bindedParams).catch(error => {
+        connection.release();
+        throw error;
+      });
+    connection.release();
+
+    return count ? rows[0].items_count : rows;
+  }
+
+  async getUserByAuthenticationCredentials(username, password) {
     let connection = await this.getConnection(),
       [rows] = await connection
         .execute(
           'SELECT * FROM ' +
             USER_TABLE +
-            ' WHERE username = ? AND password = ?;',
-          [username, password]
+            ' WHERE (username = ? OR email = ?) AND password = ? AND verified = ?;',
+          [username, username, password, true]
         )
         .catch(error => {
           connection.release();
@@ -42,6 +86,16 @@ class userModel extends model {
     return rows.length > 0 ? rows[0] : null;
   }
 
+  async getFirstFreeUsername(username, i = 0) {
+    username = i === 0 ? username : username + '' + i;
+    const isFree = (await this.getUserByUsername(username)) === null;
+    if (isFree) {
+      return username;
+    }
+
+    return await this.getFirstFreeUsername(username, i + 1);
+  }
+
   async getUserByEmail(email) {
     let connection = await this.getConnection(),
       [rows] = await connection
@@ -55,37 +109,24 @@ class userModel extends model {
     return rows.length > 0 ? rows[0] : null;
   }
 
+  async parseUserFull(user) {
+    return {
+      ...(await this.parseUser(user)),
+      firstName: user.first_name,
+      lastName: user.last_name,
+      email: user.email,
+      verified: user.verified,
+      status: user.status
+    };
+  }
+
   async parseUser(user) {
     return {
       id: user.id,
       username: user.username,
-      role: user.role
+      role: user.role,
+      date_added: user.date_added
     };
-  }
-
-  async createUser(username, password, email, role) {
-    let connection = await this.getConnection(),
-      [result] = await connection
-        .execute(
-          'INSERT INTO ' +
-            USER_TABLE +
-            ' (`username`, `password`, `email`, `role`, `date_added`, `date_modified`) ' +
-            ' VALUES ' +
-            '(?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())',
-          [username, password, email, role]
-        )
-        .catch(error => {
-          connection.release();
-          throw error;
-        });
-
-    connection.release();
-
-    if (result.insertId) {
-      return this.getItemById(result.insertId);
-    }
-
-    return null;
   }
 }
 

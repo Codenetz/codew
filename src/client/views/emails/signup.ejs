@@ -1,0 +1,16 @@
+<table>
+    <tr>
+        <td>
+            <%= USERNAME %>
+        </td>
+    </tr>
+    <tr>
+    <td>
+        <% if (VERIFICATION_TOKEN) { %>
+            <a href="#/account-activate?token=<%= VERIFICATION_TOKEN %>">activate</a>
+        <% } else { %>
+            <a target="_blank" href="#/login">login</a>
+        <% } %>
+    </td>
+    </tr>
+</table>

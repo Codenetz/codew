@@ -1,42 +1,61 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title><%= translation.translateWithParams(meta.title.text, meta.title.params) %></title>
-  <link rel="shortcut icon" href="<%= RESOURCE_HOST %>/favicon.ico">
-  <meta name="description" content="<%= translation.translateWithParams(meta.description.text, meta.description.params) %>"/>
-  <meta name="canonical" content="<%= meta.canonical %>"/>
-  <meta name="paginated" content="<%= meta.paginated %>"/>
-  <meta name="index" content="<%= meta.index %>"/>
-  <meta charset="utf-8">
-  <meta http-equiv="content-language" content="<%= language_code %>">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta property="og:title" content="<%= translation.translateWithParams(og.title.text, og.title.params) %>">
-  <meta property="og:author" content="<%= og.author %>">
-  <meta property="og:host" content="<%= og.host %>">
-  <meta property="og:image" content="<%= og.image %>">
-  <meta property="og:url" content="<%= og.url %>">
-  <meta property="og:description" content="<%= translation.translateWithParams(og.description.text, og.description.params) %>">
-  <meta property="og:type" content="<%= og.type %>">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <link type="text/css" rel="stylesheet" href="<%= RESOURCE_HOST %>/assets/dist/<%= asset_file_name %>.css"/>
-</head>
-<body>
-<script type="text/javascript">
-  window.PUBLIC_SERVER_CONFIG = {
-    MAIN_HOST: "<%= MAIN_HOST %>",
-    RESOURCE_HOST: "<%= RESOURCE_HOST %>",
-    ENV: "<%= ENV %>",
-    DEFAULT_LANGUAGE: <%- JSON.stringify(default_language) %>,
-    CURRENT_LANGUAGE: <%- JSON.stringify(current_language) %>,
-    SUPPORTED_LANGUAGES: <%- JSON.stringify(supported_languages) %>
-  };
-  window.analytics = {};
-  window.analytics.track = function () {};
-  window.analytics.identify = function () {};
-  window.analytics.push = function () {};
-</script>
-<div id="react-container"></div>
-<script src="<%= RESOURCE_HOST %>/assets/dist/<%= asset_file_name %>.js"></script>
-<script type="text/javascript" async></script>
-</body>
+    <head>
+        <title>
+            <%= meta.title %>
+        </title>
+        <link rel="shortcut icon" href="<%= RESOURCE_HOST %>/favicon.ico" />
+        <meta name="description" content="<%= meta.description %>" />
+        <meta name="canonical" content="<%= meta.canonical %>" />
+        <meta name="paginated" content="<%= meta.paginated %>" />
+        <meta name="index" content="<%= meta.index %>" />
+        <meta charset="utf-8" />
+        <meta http-equiv="content-language" content="<%= language_code %>" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta property="og:title" content="<%= og.title %>" />
+        <meta property="og:author" content="<%= og.author %>" />
+        <meta property="og:host" content="<%= og.host %>" />
+        <meta property="og:image" content="<%= og.image %>" />
+        <meta property="og:url" content="<%= og.url %>" />
+        <meta property="og:description" content="<%= og.description %>" />
+        <meta property="og:type" content="<%= og.type %>" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, maximum-scale=1"
+        />
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+            crossorigin="anonymous"
+        />
+        <link
+            type="text/css"
+            rel="stylesheet"
+            href="<%= RESOURCE_HOST %>/assets/dist/<%= asset_file_name %>.css"
+        />
+        <link rel="shortcut icon" href="favicon.png" />
+    </head>
+    <body>
+        <script type="text/javascript">
+            window.PUBLIC_SERVER_CONFIG = {
+              MAIN_HOST: "<%= MAIN_HOST %>",
+              GOOGLE_API_KEY: "<%= GOOGLE_API_KEY %>",
+              GOOGLE_ANALYTICS_KEY: "<%= GOOGLE_ANALYTICS_KEY %>",
+              RESOURCE_HOST: "<%= RESOURCE_HOST %>",
+              FACEBOOK_APP_ID: "<%= FACEBOOK_APP_ID %>",
+              ENV: "<%= ENV %>",
+              DEFAULT_LANGUAGE: <%- JSON.stringify(default_language) %>,
+              CURRENT_LANGUAGE: <%- JSON.stringify(current_language) %>,
+              SUPPORTED_LANGUAGES: <%- JSON.stringify(supported_languages) %>
+            };
+            window.analytics = {};
+            window.analytics.track = function () {};
+            window.analytics.identify = function () {};
+            window.analytics.push = function () {};
+        </script>
+        <div id="react-container"></div>
+        <script src="<%= RESOURCE_HOST %>/assets/dist/<%= asset_file_name %>.js"></script>
+        <script type="text/javascript" async></script>
+    </body>
 </html>

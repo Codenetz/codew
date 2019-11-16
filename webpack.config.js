@@ -40,7 +40,8 @@ let stylus_loader = () => {
 const config = {
   entry: {
     ['desktop' + version.hash]: './src/client/desktop/app.js',
-    ['mobile' + version.hash]: './src/client/mobile/app.js'
+    ['mobile' + version.hash]: './src/client/mobile/app.js',
+    ['admin' + version.hash]: './src/client/admin/app.js'
   },
   output: {
     filename: '[name].js',
@@ -54,14 +55,6 @@ const config = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: ['babel-loader']
-      },
-      {
-        test: /\.(js|jsx)$/,
-        exclude: [
-          /node_modules/
-        ],
-        loader: 'eslint-loader',
-        options: { strict: true, 'max-warnings': 0 }
       },
       {
         test: /common\.styl$/,
@@ -91,7 +84,10 @@ const config = {
   resolve: {
     extensions: ['*', '.js', '.jsx', '.styl'],
     alias: {
-      utils: path.resolve(__dirname, 'src/client/utils')
+      utils: path.resolve(__dirname, 'src/client/utils'),
+      packages: path.resolve(__dirname, 'src/client/packages'),
+      helpers: path.resolve(__dirname, 'src/client/helpers'),
+      contexts: path.resolve(__dirname, 'src/client/helpers/contexts')
     }
   },
   plugins: [
@@ -101,7 +97,7 @@ const config = {
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[name]chunk' + version.hash + '.css'
-    }),
+    })
   ],
   mode: env,
   watch: isDevelopment,
