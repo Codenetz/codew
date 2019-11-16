@@ -11,8 +11,6 @@ if (env.isDevelopment) {
   require('./boot/eslint');
 }
 
-//start client load
-
 server.load().then(() => {
   logger.success('Server is running on port: ' + env.vars.SERVER_PORT);
 });

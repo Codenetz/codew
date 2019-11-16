@@ -113,7 +113,7 @@ class migration {
     }
 
     if (latest_migration !== null && migration_latest_path_index < 0) {
-      throw new Error('Latest path was not found in migrations config file.');
+      throw new Error('latest path was not found in migrations config file.');
     }
 
     /** Get next migration path after the latest */
@@ -153,7 +153,7 @@ class migration {
     }
 
     if (migration_latest_path_index <= -1) {
-      throw new Error('Latest path was not found in migrations config file.');
+      throw new Error('latest path was not found in migrations config file.');
     }
 
     let executed = await this.execute(latest_migration, 'down');

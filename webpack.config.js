@@ -56,14 +56,6 @@ const config = {
         use: ['babel-loader']
       },
       {
-        test: /\.(js|jsx)$/,
-        exclude: [
-          /node_modules/
-        ],
-        loader: 'eslint-loader',
-        options: { strict: true, 'max-warnings': 0 }
-      },
-      {
         test: /common\.styl$/,
         use: [
           MiniCssExtractPlugin.loader,
@@ -91,7 +83,10 @@ const config = {
   resolve: {
     extensions: ['*', '.js', '.jsx', '.styl'],
     alias: {
-      utils: path.resolve(__dirname, 'src/client/utils')
+      utils: path.resolve(__dirname, 'src/client/utils'),
+      packages: path.resolve(__dirname, 'src/client/packages'),
+      helpers: path.resolve(__dirname, 'src/client/helpers'),
+      contexts: path.resolve(__dirname, 'src/client/helpers/contexts')
     }
   },
   plugins: [
@@ -101,7 +96,7 @@ const config = {
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[name]chunk' + version.hash + '.css'
-    }),
+    })
   ],
   mode: env,
   watch: isDevelopment,

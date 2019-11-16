@@ -3,6 +3,14 @@
     "path": "/modules/user/user"
   },
 
+  "MEDIA": {
+    "path": "/modules/media/media"
+  },
+
+  "META": {
+    "path": "/modules/meta/meta"
+  },
+
   "HOME": {
     "path": "/modules/home/home"
   }

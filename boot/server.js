@@ -13,6 +13,7 @@ let express = require('express'),
   errorMiddleware = require('./../src/server/middlewares/error'),
   version = require('./../src/server/lib/version'),
   proxy = require('./proxy'),
+  sendgrid = require('./sendgrid'),
   multer = require('./multer'),
   maxmind = require('maxmind'),
   app = express();
@@ -42,6 +43,9 @@ if (env.isDevelopment) {
 
 /** Loads multer */
 multer(app);
+
+/** Loads sendgrid */
+sendgrid(app);
 
 if (env.vars.ENABLE_MULTILANGUAGE === 'true') {
   /** Loads mmdb */
