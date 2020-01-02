@@ -20,7 +20,7 @@ class userModel extends model {
     let selection = count === true ? 'COUNT(*) as items_count' : '*';
 
     let sql =
-      'SELECT ' + selection + ' FROM ' + USER_TABLE + ' WHERE deleted = 0 ',
+        'SELECT ' + selection + ' FROM ' + USER_TABLE + ' WHERE deleted = 0 ',
       bindedParams = [];
 
     if (search && search.length) {
@@ -34,7 +34,12 @@ class userModel extends model {
     }
 
     if (order && typeof order !== 'undefined' && order.length >= 2) {
-      sql += 'ORDER BY ' + this.clearName(order[0]) + ' ' + this.clearName(order[1]) + ' ';
+      sql +=
+        'ORDER BY ' +
+        this.clearName(order[0]) +
+        ' ' +
+        this.clearName(order[1]) +
+        ' ';
     }
 
     if (limit) {
@@ -63,8 +68,8 @@ class userModel extends model {
       [rows] = await connection
         .execute(
           'SELECT * FROM ' +
-          USER_TABLE +
-          ' WHERE (username = ? OR email = ?) AND password = ? AND verified = ?;',
+            USER_TABLE +
+            ' WHERE (username = ? OR email = ?) AND password = ? AND verified = ?;',
           [username, username, password, true]
         )
         .catch(error => {
