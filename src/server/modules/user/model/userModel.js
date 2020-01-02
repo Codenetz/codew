@@ -14,12 +14,13 @@ class userModel extends model {
     offset = null,
     count = false,
     search = null,
-    order = null
+    order = null,
+    role = null
   ) {
     let selection = count === true ? 'COUNT(*) as items_count' : '*';
 
     let sql =
-        'SELECT ' + selection + ' FROM ' + USER_TABLE + ' WHERE deleted = 0 ',
+      'SELECT ' + selection + ' FROM ' + USER_TABLE + ' WHERE deleted = 0 ',
       bindedParams = [];
 
     if (search && search.length) {
@@ -27,9 +28,13 @@ class userModel extends model {
       bindedParams.push('%' + search + '%');
       bindedParams.push('%' + search + '%');
     }
+    if (role) {
+      sql += 'AND role LIKE ? ';
+      bindedParams.push(role);
+    }
 
     if (order && typeof order !== 'undefined' && order.length >= 2) {
-      sql += 'ORDER BY ' + order[0] + ' ' + order[1] + ' ';
+      sql += 'ORDER BY ' + this.clearName(order[0]) + ' ' + this.clearName(order[1]) + ' ';
     }
 
     if (limit) {
@@ -58,8 +63,8 @@ class userModel extends model {
       [rows] = await connection
         .execute(
           'SELECT * FROM ' +
-            USER_TABLE +
-            ' WHERE (username = ? OR email = ?) AND password = ? AND verified = ?;',
+          USER_TABLE +
+          ' WHERE (username = ? OR email = ?) AND password = ? AND verified = ?;',
           [username, username, password, true]
         )
         .catch(error => {
@@ -121,9 +126,15 @@ class userModel extends model {
   }
 
   async parseUser(user) {
+    const imageModel = this.app.get('MODEL').get('imageModel');
+
     return {
       id: user.id,
       username: user.username,
+      bio: user.bio,
+      avatar: user.avatar
+        ? await imageModel.getImageTypesById(user.avatar)
+        : null,
       role: user.role,
       date_added: user.date_added
     };

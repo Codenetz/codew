@@ -1,5 +1,6 @@
 'use strict';
 let logger = require('./../../../src/server/utils/logger');
+
 class model {
   constructor(app, table) {
     if (this.constructor.name === 'model') {
@@ -9,6 +10,7 @@ class model {
     this.app = app;
     this.bindScope();
   }
+
   bindScope() {
     const { ENV } = this.app.settings;
     /** Log loaded models */
@@ -27,10 +29,12 @@ class model {
       }
     }
   }
+
   /** Gets connection from pool */
   async getConnection() {
     return await this.app.get('MYSQL_POOL').getConnection();
   }
+
   /** Soft deletes an item */
   async deleteItemById(id) {
     let connection = await this.getConnection();
@@ -43,31 +47,55 @@ class model {
     connection.release();
     return true;
   }
+
   /** Gets a single item by an id */
   async getItemById(id) {
     let rows = await this.getItemsBy({ id: id });
     return rows.length > 0 ? rows[0] : null;
   }
+
   /** Gets items with limit and offset */
   async getItems(limit, offset) {
     return await this.getItemsBy(undefined, limit, offset);
   }
+
   async getItemBy(andWhere) {
     let result = await this.getItemsBy(andWhere, 1, 0);
     if (result.length <= 0) return null;
     return result[0];
   }
+
   async getItemsCount(andWhere) {
     const count = await this.getItemsBy(
       andWhere,
       undefined,
       undefined,
       undefined,
-      ['count(*) as items_count']
+      [],
+      true
     );
     return count && count.length > 0 && count[0].items_count
       ? parseInt(count[0].items_count)
       : 0;
+  }
+
+  async idsExists(ids, filters = {}) {
+    /** Removes duplicates if any */
+    ids = [...new Set(ids.slice())].map(v => parseInt(v));
+    if (ids.length <= 0) {
+      return false;
+    }
+
+    return (
+      (
+        await Promise.all(
+          ids.map(
+            async id =>
+              !!(await this.getItemBy(Object.assign({}, { id }, filters)))
+          )
+        )
+      ).filter(Boolean).length === ids.length
+    );
   }
 
   async hardDeleteBy(andWhere) {
@@ -80,7 +108,7 @@ class model {
     if (fields_where.length > 0) {
       sql += ' WHERE ';
       for (const field of fields_where) {
-        whereArray.push(field + ' = ?');
+        whereArray.push(this.clearName(field) + ' = ?');
         bindedParams.push(andWhere[field]);
       }
       sql += whereArray.join(' AND ');
@@ -96,7 +124,7 @@ class model {
   }
 
   async insert(values) {
-    const fields = Object.keys(values);
+    const fields = Object.keys(values).map(f => this.clearName(f));
 
     let sql = 'INSERT INTO ' + this.table + ' ';
 
@@ -136,7 +164,7 @@ class model {
     let whereArray = [];
     let bindedParams = [];
     for (const field of fields) {
-      setArray.push(field + ' = ?');
+      setArray.push(this.clearName(field) + ' = ?');
       bindedParams.push(values[field]);
     }
     sql += setArray.join(', ');
@@ -144,7 +172,7 @@ class model {
     if (fields_where.length > 0) {
       sql += ' WHERE ';
       for (const field of fields_where) {
-        whereArray.push(field + ' = ?');
+        whereArray.push(this.clearName(field) + ' = ?');
         bindedParams.push(andWhere[field]);
       }
       sql += whereArray.join(' AND ');
@@ -159,8 +187,23 @@ class model {
     return rows;
   }
 
-  async getItemsBy(andWhere, limit, offset, orderBy, fields = []) {
-    const sqlFields = fields.length <= 0 ? '*' : fields.join(', ');
+  clearName(name) {
+    return name.replace(/[^-_a-z0-9]/gi, '');
+  }
+
+  async getItemsBy(
+    andWhere,
+    limit,
+    offset,
+    orderBy,
+    fields = [],
+    items_count = false
+  ) {
+    let sqlFields =
+      fields.length <= 0 ? '*' : fields.map(f => this.clearName(f)).join(', ');
+
+    sqlFields = items_count === true ? 'count(*) as items_count' : sqlFields;
+
     let sql = 'SELECT ' + sqlFields + ' FROM ' + this.table + ' ',
       bindedParams = [];
     /** Handles the where clause */
@@ -171,12 +214,15 @@ class model {
       if (fields.length > 0) {
         let andWhereArray = [];
         fields.forEach(field => {
+          let fieldName = this.clearName(field);
+
           /** Handles NULL values */
           if (valuesByKeys[field] === null) {
-            andWhereArray.push(field + ' is NULL ');
+            andWhereArray.push(fieldName + ' is NULL ');
             return;
           }
-          andWhereArray.push(field + ' = ? ');
+
+          andWhereArray.push(fieldName + ' = ? ');
           bindedParams.push(valuesByKeys[field]);
         });
 
@@ -187,7 +233,12 @@ class model {
       }
     }
     if (typeof orderBy !== 'undefined' && orderBy.length >= 2) {
-      sql += 'ORDER BY ' + orderBy[0] + ' ' + orderBy[1] + ' ';
+      sql +=
+        'ORDER BY ' +
+        this.clearName(orderBy[0]) +
+        ' ' +
+        this.clearName(orderBy[1]) +
+        ' ';
     }
     if (typeof limit !== 'undefined') {
       sql += 'LIMIT ? ';
@@ -207,4 +258,5 @@ class model {
     return rows;
   }
 }
+
 module.exports = model;
