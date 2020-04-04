@@ -10,15 +10,15 @@ class imageModel extends model {
     this.app = app;
   }
 
-  async addImage(path, extension, alt, width, height, filesize, user_id) {
+  async addImage(path, extension, alt, width, height, file_size, user_id) {
     let connection = await this.getConnection();
     await connection
       .execute(
         'INSERT INTO ' +
           this.table +
-          ' (path, extension, alt, width, height, filesize, user_id, date_added, date_modified) VALUES' +
+          ' (path, extension, alt, width, height, file_size, user_id, date_added, date_modified) VALUES' +
           ' (?, ?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP(), UNIX_TIMESTAMP())',
-        [path, extension, alt, width, height, filesize, user_id]
+        [path, extension, alt, width, height, file_size, user_id]
       )
       .catch(error => {
         connection.release();

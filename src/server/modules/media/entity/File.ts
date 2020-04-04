@@ -1,10 +1,10 @@
 import { Entity, Column, ManyToOne, JoinColumn } from "typeorm";
 import { User } from "../../user/entity/User";
 import { Base } from "../../home/entity/Base";
-import { IMAGE_TABLE } from "../constants/tables";
+import { FILE_TABLE } from "../constants/tables";
 
-@Entity({ name: IMAGE_TABLE })
-export class Image extends Base {
+@Entity({ name: FILE_TABLE })
+export class File extends Base {
   @Column()
   path: string;
 
@@ -15,10 +15,13 @@ export class Image extends Base {
   alt: string;
 
   @Column()
-  width: number;
+  name: string;
 
-  @Column()
-  height: number;
+  @Column({ nullable: true })
+  copyright: string;
+
+  @Column({ nullable: true })
+  author: string;
 
   @Column()
   file_size: number;

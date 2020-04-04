@@ -1,8 +1,8 @@
 'use strict';
 
 let controller = require('./../../../../core/controller'),
-  { getFromMIMEType } = require('./../../../../utils/extension'),
   getImageSize = require('../../imageManipulator/getImageSize'),
+  pathNode = require('path'),
   Boom = require('boom');
 
 class imageController extends controller {
@@ -11,12 +11,14 @@ class imageController extends controller {
   }
 
   async uploadAction(req, res, next) {
-    let basePath = req.app.get('ENV').basePath,
-      file = req.file,
-      path = '/uploads/' + file.filename,
+    let file = req.file,
+      path = file.filename,
       alt = req.body.alt || null,
-      extension = await getFromMIMEType(file.mimetype),
-      image_size = await getImageSize(basePath + '/public' + path),
+      extension = pathNode
+        .extname(path)
+        .split('.')
+        .pop(),
+      image_size = await getImageSize(req.file.buffer),
       imageModel = this.app.get('MODEL').get('imageModel'),
       imageTypeService = this.app.get('SERVICE').get('imageTypeService'),
       image = null;

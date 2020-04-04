@@ -8,6 +8,10 @@ module.exports.getFromMIMEType = async mime => {
       return 'png';
     case 'image/gif':
       return 'gif';
+    case 'image/webp':
+      return 'webp';
+    case 'application/pdf':
+      return 'pdf';
     default:
       return null;
   }
