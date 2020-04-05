@@ -9,8 +9,9 @@ npm-debug.log
 /public/assets/dist/
 /public/uploads/
 /public/cache/
+/public/original/
+/public/files/
 /var/geo/
 .vscode/
 .history/
-package-lock.json
 /.certs/
